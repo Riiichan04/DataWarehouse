@@ -1,3 +1,3 @@
 //FIXME: This is a temp file for defining structure
-public class CrawlDataOperator {
+public class LoadDataToStagingOperator {
 }
