@@ -8,6 +8,7 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 public interface StagingDAO {
+    //Insert new data into staging
     @SqlUpdate("""
         insert into lottery_staging(date, prizeName, companyName, result, createdAt)
         values(:date, :prizeName, :companyName, :result, :createdAt)
@@ -15,10 +16,12 @@ public interface StagingDAO {
     @RegisterBeanMapper(CrawlResult.class)
     int loadDataToStaging(@BindBean CrawlResult result);
 
+    //Does input date exist in staging database
     @SqlQuery("""
-        select count(id)
+        select 1
         from lottery_staging
         where date = :date
+        limit 1
     """)
     boolean isDateExist(@Bind("date") String date);
 }

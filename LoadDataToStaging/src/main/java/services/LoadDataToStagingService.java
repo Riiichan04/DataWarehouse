@@ -17,10 +17,20 @@ public class LoadDataToStagingService {
         this.stagingDAO = JDBIConnector.getInstance().onDemand(StagingDAO.class);
     }
 
+    /**
+     * Load data from inputFile to staging database
+     * @param inputFile - Input csv file
+     */
     public void transformAndLoadDataToStaging(File inputFile) {
+        if (!inputFile.exists() || !inputFile.getName().endsWith("csv")) return;
         loadDataToStaging(transformResultToModel(inputFile));
     }
 
+    /**
+     * Convert data from csv file to CrawlResult model
+     * @param inputFile - Input csv file
+     * @return A list model represent data from csv file
+     */
     public List<CrawlResult> transformResultToModel(File inputFile) {
         try {
             List<CrawlResult> result = new ArrayList<>();
@@ -36,20 +46,23 @@ public class LoadDataToStagingService {
             }
             br.close();
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             //Log here
             return null;
         }
     }
 
+    //Load a list model into staging database
     public void loadDataToStaging(List<CrawlResult> listInput) {
         for (CrawlResult crawlResult : listInput) {
-            //Temp
-            loadModelToStaging(crawlResult);
+            //Only insert new data if date not exist
+            if (!stagingDAO.isDateExist(crawlResult.getDate())) {
+                loadModelToStaging(crawlResult);
+            }
         }
     }
 
+    //Load a model into staging database
     private int loadModelToStaging(CrawlResult input) {
         return stagingDAO.loadDataToStaging(input);
     }

@@ -19,10 +19,10 @@ public interface DirectoryUtil {
     }
 
     /**
-     * Get result file for a date
+     * Get result .csv file for a date
      * @param directoryPath Path of directory contain crawl result
      * @param offsetLocalDate Offset time from today
-     * @return List result file of today
+     * @return List result .csv file of today
      */
     static File[] getAllFileByDate(String directoryPath, OffsetLocalDate offsetLocalDate) {
         File dir = new File(directoryPath);
