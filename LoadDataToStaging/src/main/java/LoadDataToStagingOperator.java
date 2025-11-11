@@ -1,3 +1,34 @@
-//FIXME: This is a temp file for defining structure
+import services.LoadDataToStagingService;
+import utils.DirectoryUtil;
+import utils.OffsetLocalDate;
+
+import java.io.File;
+
 public class LoadDataToStagingOperator {
+    public static void main(String[] args) {
+        OffsetLocalDate offset = new OffsetLocalDate();
+        try {
+            offset = new OffsetLocalDate(
+                    Long.parseLong(args[0]),
+                    Long.parseLong(args[1]),
+                    Long.parseLong(args[2]),
+                    Long.parseLong(args[3])
+            );
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid date offset, used zero offset instead.");
+        }
+
+        LoadDataToStagingService service = new LoadDataToStagingService();
+        File[] listFile = DirectoryUtil.getAllFileByDate("/result", offset);
+
+        if (listFile == null) return;
+        for (File file : listFile) {
+            try {
+                service.transformAndLoadDataToStaging(file);
+            }
+            catch (Exception e) {
+                //Log here
+            }
+        }
+    }
 }

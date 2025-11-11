@@ -17,10 +17,13 @@ public class LoadDataToStagingService {
         this.stagingDAO = JDBIConnector.getInstance().onDemand(StagingDAO.class);
     }
 
-    public List<CrawlResult> transformResultToModel(String inputPath) {
+    public void transformAndLoadDataToStaging(File inputFile) {
+        loadDataToStaging(transformResultToModel(inputFile));
+    }
+
+    public List<CrawlResult> transformResultToModel(File inputFile) {
         try {
             List<CrawlResult> result = new ArrayList<>();
-            File inputFile = new File(inputPath);
             BufferedReader br = new BufferedReader(new FileReader(inputFile));
             //Skip header
             br.readLine();
@@ -40,7 +43,14 @@ public class LoadDataToStagingService {
         }
     }
 
-    public int loadModelToStaging(CrawlResult input) {
+    public void loadDataToStaging(List<CrawlResult> listInput) {
+        for (CrawlResult crawlResult : listInput) {
+            //Temp
+            loadModelToStaging(crawlResult);
+        }
+    }
+
+    private int loadModelToStaging(CrawlResult input) {
         return stagingDAO.loadDataToStaging(input);
     }
 
