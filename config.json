@@ -1,0 +1,15 @@
+{
+  "runDate": "11_11_2025",
+  "source": {
+    "sourceId": 1,
+    "name": "XoSoVN",
+    "url": "https://xosovietnam.example.com"
+  },
+  "processList": [
+    {
+      "id": 4,
+      "scriptName": "crawl_11_11_2025",
+      "targetPath": "/dw_t4c2n10/staging/result/result_11_11_2025.csv"
+    }
+  ]
+}
