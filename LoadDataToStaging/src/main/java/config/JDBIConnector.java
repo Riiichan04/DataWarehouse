@@ -7,7 +7,6 @@ public class JDBIConnector {
 
     private static Jdbi createJdbi() {
         if (jdbi == null) {
-            //FIXME: Add config here
             ConfigLoader config = new ConfigLoader("");
             DatabaseConnection connection = config.loadDatabaseConfig();
             jdbi = Jdbi.create(connection.getConnection());
