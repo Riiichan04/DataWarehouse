@@ -1,5 +1,6 @@
 package models;
 
+import enums.CrawlType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,4 +15,5 @@ public class DataSource {
     private String url;
     private String name;
     private String targetPath;
+    private CrawlType type;
 }

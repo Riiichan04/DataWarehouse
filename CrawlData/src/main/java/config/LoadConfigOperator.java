@@ -2,6 +2,7 @@ package config;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import enums.CrawlType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,7 +48,24 @@ public class LoadConfigOperator {
             String url = sourceJson.get("url").getAsString();
             String targetPath = processJson.get("targetPath").getAsString();
 
-            return new DataSource(sourceId, sourceName, url, targetPath);
+            String type = jsonResult.get("type").getAsString();
+            CrawlType crawlType;
+            switch (type.toUpperCase()) {
+                case "NORTH" -> crawlType = CrawlType.NORTH;
+                case "SOUTH" -> crawlType = CrawlType.SOUTH;
+                case "MIDDLE" -> crawlType = CrawlType.MIDDLE;
+                default -> crawlType = null;
+            }
+
+            if (crawlType == null) return null;
+
+            DataSource result = new DataSource();
+            result.setSourceId(sourceId);
+            result.setName(sourceName);
+            result.setUrl(url);
+            result.setTargetPath(targetPath);
+            result.setType(crawlType);
+            return result;
         }
         catch (Exception e) {
             //Log err here
