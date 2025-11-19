@@ -16,9 +16,11 @@ import java.util.Objects;
 
 public class CrawlDataService {
     public static List<CrawlResult> crawl(DataSource dataSource, int offset) {
-        //Temp, will fixed later
+        //Always >= 0
+        offset = Math.abs(offset);
         String urlDestination;
         CrawlType crawlType = dataSource.getType();
+        //Temp, will fixed later
         switch (crawlType) {
             case NORTH -> urlDestination = "xo-so-mien-bac/xsmb-p1.html";
             case MIDDLE -> urlDestination = "xo-so-mien-trung/xsmt-p1.html";
