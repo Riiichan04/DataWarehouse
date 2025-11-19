@@ -7,8 +7,8 @@ public class JDBIConnector {
 
     private static Jdbi createJdbi() {
         if (jdbi == null) {
-            ConfigLoader config = new ConfigLoader("");
-            DatabaseConnection connection = config.loadDatabaseConfig();
+            LoadConfigOperator config = new LoadConfigOperator();
+            DatabaseConnection connection = config.loadConfig();
             jdbi = Jdbi.create(connection.getConnection());
             jdbi.installPlugins();
         }
