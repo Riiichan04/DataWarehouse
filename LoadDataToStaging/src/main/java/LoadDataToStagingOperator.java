@@ -1,3 +1,6 @@
+import config.DatabaseConnection;
+import config.LoadConfigOperator;
+import models.ProcessDetail;
 import services.ControlService;
 import services.LoadDataToStagingService;
 import utils.DirectoryUtil;
@@ -18,10 +21,11 @@ public class LoadDataToStagingOperator {
         } catch (NumberFormatException e) {
             System.out.println("Invalid date offset, used zero offset instead.");
         }
-
         LoadDataToStagingService service = new LoadDataToStagingService();
-        ControlService control = new ControlService();
-        File[] listFile = DirectoryUtil.getAllFileByDate("/result", offset);
+//        ControlService control = new ControlService();
+
+        String targetPath = ProcessDetail.getInstance().getTargetPath();
+        File[] listFile = DirectoryUtil.getAllFileByDate(targetPath, offset);
 
         if (listFile == null) return;
         for (File file : listFile) {

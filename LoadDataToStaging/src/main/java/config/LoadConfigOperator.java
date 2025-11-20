@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import models.ProcessDetail;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -39,8 +40,21 @@ public class LoadConfigOperator {
 
             //Parse JSON
             JsonObject jsonResult = JsonParser.parseString(commandResult.toString()).getAsJsonObject();
-            //Log sucess here
-            return extractJsonResultToDatabaseConnection(jsonResult, StorageType.STAGING);
+            //Init process detail
+            JsonObject jsonProcess = jsonResult.getAsJsonObject("source_process");
+            int processId = jsonProcess.get("id").getAsInt();
+            String processName = jsonProcess.get("name").getAsString();
+            String processTarget = jsonProcess.get("targetPath").getAsString();
+            ProcessDetail processDetail = ProcessDetail.getInstance();
+            processDetail.initData(processId, processName, processTarget);
+
+            DatabaseConnection result = extractJsonResultToDatabaseConnection(jsonResult, StorageType.STAGING);
+            //If result != null
+            if (result != null) {
+                //Log success here
+            }
+            else {} //Log failure here
+            return result;
         }
         catch (Exception e) {
             //Log err here
