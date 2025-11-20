@@ -3,6 +3,7 @@ package services;
 import config.JDBIConnector;
 import dao.StagingDAO;
 import models.CrawlResult;
+import models.Prize;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,8 +41,19 @@ public class LoadDataToStagingService {
             String line = "";
             while ((line = br.readLine()) != null) {
                 //Temp, will replaced by library here
+                //-1 to keep case prize 8 missing in Northen
                 String[] parsedLine = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-                CrawlResult crawlResult = new CrawlResult(parsedLine);
+                String date = parsedLine[0];
+                String companyName = parsedLine[1];
+                String createdAt = parsedLine[2];
+                List<String> prizeString = List.of(parsedLine).subList(3, parsedLine.length);
+                List<Prize> listPrize = new ArrayList<>();
+
+                for (int i = 0; i < parsedLine.length; i++) {
+                    listPrize.add(new Prize("Giải " + i, prizeString.get(i)));
+                }
+
+                CrawlResult crawlResult = new CrawlResult(date, companyName, createdAt, listPrize);
                 result.add(crawlResult);
             }
             br.close();

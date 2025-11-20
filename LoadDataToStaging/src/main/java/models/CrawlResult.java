@@ -5,22 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CrawlResult {
     private String date;
-    private String prizeName;
     private String companyName;
-    private String result;
     private String createdAt;
-
-    public CrawlResult(String... listParam) {
-        this.date = listParam[0];
-        this.prizeName = listParam[1];
-        this.companyName = listParam[2];
-        this.result = listParam[3];
-        this.createdAt = listParam[4];
-    }
+    private List<Prize> listPrize;
 }

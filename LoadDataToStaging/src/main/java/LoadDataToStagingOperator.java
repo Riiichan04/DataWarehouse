@@ -1,3 +1,4 @@
+import services.ControlService;
 import services.LoadDataToStagingService;
 import utils.DirectoryUtil;
 import utils.OffsetLocalDate;
@@ -19,11 +20,14 @@ public class LoadDataToStagingOperator {
         }
 
         LoadDataToStagingService service = new LoadDataToStagingService();
+        ControlService control = new ControlService();
         File[] listFile = DirectoryUtil.getAllFileByDate("/result", offset);
 
         if (listFile == null) return;
         for (File file : listFile) {
             try {
+                //FIXME: Add config here
+//                control.addNewProcess();
                 service.transformAndLoadDataToStaging(file);
             }
             catch (Exception e) {
