@@ -44,24 +44,32 @@ public class LoadConfigOperator {
                     host + ":" +
                     port + "/" +
                     dbname;
+            int sourceId=-1;
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                int sourceId;
-                JSONObject sourceJson = new JSONObject();
+                List<JSONObject> sourceList = new ArrayList<>();
 
                 try (PreparedStatement psSource = conn.prepareStatement(
-                        "SELECT * FROM cfg_source WHERE isactive = 1 LIMIT 1"
+                        "SELECT * FROM cfg_source WHERE isactive = 1"
                 );
                      ResultSet rsSource = psSource.executeQuery()) {
 
-                    if (!rsSource.next()) {
+                    boolean hasData = false;
+
+                    while (rsSource.next()) {
+                        hasData = true;
+                        JSONObject obj = new JSONObject();
+
+                        obj.put("id", rsSource.getInt("id"));
+                        obj.put("name", rsSource.getString("name"));
+                        obj.put("url", rsSource.getString("url"));
+                        sourceList.add(obj);
+                        sourceId = rsSource.getInt("id");
+                    }
+
+                    if (!hasData) {
                         System.err.println("No active source!");
                         return;
                     }
-
-                    sourceJson.put("id", rsSource.getInt("id"));
-                    sourceJson.put("name", rsSource.getString("name"));
-                    sourceJson.put("url", rsSource.getString("url"));
-                    sourceId = rsSource.getInt("id");
                 }
 
                 LocalDateTime now = LocalDateTime.now()
@@ -71,24 +79,32 @@ public class LoadConfigOperator {
                         .plusSeconds(offsetSeconds);
 
                 String runDate = now.toLocalDate().toString();
+                JSONArray arrSourceProcess = new JSONArray();
+                JSONArray arrStagingProcess = new JSONArray();
+                JSONArray arrWarehouseProcess = new JSONArray();
+                for (JSONObject sourceObj : sourceList) {
 
-                JSONArray arrSourceProcess = ensureDailySourceProcess(conn, sourceId, runDate);
+                    int sid = sourceObj.getInt("id");
 
+                    JSONArray sp = ensureDailySourceProcess(conn, sid, runDate);
+                    arrSourceProcess.put(sp.getJSONObject(0));
 
-                JSONArray arrStagingProcess = ensureDailyStagingProcess(conn, arrSourceProcess.getJSONObject(0).getInt("id"), runDate);
+                    JSONArray st = ensureDailyStagingProcess(conn, sp.getJSONObject(0).getInt("id"), runDate);
+                    arrStagingProcess.put(st.getJSONObject(0));
 
-                JSONArray arrWareHouseProcess = ensureDailyWarehouseProcess(conn, arrStagingProcess.getJSONObject(0).getInt("id"), runDate);
-
+                    JSONArray wp = ensureDailyWarehouseProcess(conn, st.getJSONObject(0).getInt("id"), runDate);
+                    arrWarehouseProcess.put(wp.getJSONObject(0));
+                }
 
                 String runtimeConfigPath = "/dw_t4c2n10/staging/runtime_config.json";
 
 
                 JSONObject runtimeJSON = new JSONObject();
                 runtimeJSON.put("runDate", runDate);
-                runtimeJSON.put("source", sourceJson);
+                runtimeJSON.put("source", new JSONArray(sourceList));
                 runtimeJSON.put("source_process", arrSourceProcess);
                 runtimeJSON.put("staging_process", arrStagingProcess);
-                runtimeJSON.put("warehouse_process", arrWareHouseProcess);
+                runtimeJSON.put("warehouse_process", arrWarehouseProcess);
 
                 JSONObject scripts = new JSONObject();
                 scripts.put("dataCrawler", "/dw_t4c2n10/staging/dataCrawler.jar");
@@ -133,7 +149,7 @@ public class LoadConfigOperator {
     static JSONArray ensureDailySourceProcess(Connection conn, int sourceId, String runDate) throws SQLException {
         JSONArray arrSourceProcess = new JSONArray();
 
-        String sql = "SELECT * FROM cfg_source_process WHERE dataSourceId=? AND name=?";
+        String sql = "SELECT * FROM cfg_source_process WHERE dataSourceId=? AND name LIKE ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, sourceId);
             ps.setString(2, "%_" + runDate);
@@ -223,6 +239,7 @@ public class LoadConfigOperator {
 
     static JSONArray ensureDailyWarehouseProcess(Connection conn, int stagingProcessId, String runDate) throws SQLException {
         JSONArray arrWarehouseProcess = new JSONArray();
+
 
         String selectSql = "SELECT * FROM cfg_warehouse_process WHERE dependentProcessId=? AND name LIKE ?";
         try (PreparedStatement ps = conn.prepareStatement(selectSql)) {
