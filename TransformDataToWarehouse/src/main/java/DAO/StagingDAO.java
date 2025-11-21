@@ -1,5 +1,8 @@
 package DAO;
 
+import models.DimCompany;
+import models.DimPrize;
+import models.DimRegion;
 import models.LotteryStaging;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -15,17 +18,17 @@ public interface StagingDAO {
     List<LotteryStaging> getLotteryStaging();
 
     @SqlCall("""
-            CALL select_company_sk(:name)
+            CALL find_company_sk(:name)
             """)
     int getCompanySK(@Bind("name") String name);
 
     @SqlCall("""
-            CALL select_prize_sk(:name)
+            CALL find_prize_sk(:name)
             """)
     int getPrizeSK(@Bind("name") String name);
 
     @SqlCall("""
-            CALL select_date_sk(:date)
+            CALL find_date_sk(:date)
             """)
     int getDateSK(@Bind("date") String date);
 
@@ -39,4 +42,21 @@ public interface StagingDAO {
             """)
     int insertPrize(@Bind("companyPrize") String companyPrize);
 
+    @SqlCall("""
+            CALL get_dim_company()
+            """)
+    @RegisterBeanMapper(DimCompany.class)
+    List<DimCompany> getDimCompany();
+
+    @SqlCall("""
+            CALL get_dim_region()
+            """)
+    @RegisterBeanMapper(DimRegion.class)
+    List<DimRegion> getDimRegion();
+
+    @SqlCall("""
+            CALL get_dim_company()
+            """)
+    @RegisterBeanMapper(DimPrize.class)
+    List<DimPrize> getDimPrize();
 }
