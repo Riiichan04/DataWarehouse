@@ -1,6 +1,6 @@
 package service;
 
-import dto.Process;
+import model.Process;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,24 +11,21 @@ import java.util.List;
 
 public class ProcessService {
 
-    public List<dto.Process> getProcessList(Connection conn, int sourceId) throws SQLException {
+    public List<Process> getAllProcesses(Connection conn) throws SQLException {
         List<Process> list = new ArrayList<>();
-
-        PreparedStatement st = conn.prepareStatement(
-                "SELECT id, targetPath, name AS scriptName FROM cfg_source_process WHERE dataSourceId=?"
-        );
-        st.setInt(1, sourceId);
-
-        ResultSet rs = st.executeQuery();
-
-        while (rs.next()) {
-            dto.Process p = new dto.Process();
-            p.setId(rs.getInt("id"));
-            p.setTargetPath(rs.getString("targetPath"));
-            p.setScriptName( rs.getString("scriptName"));
-            list.add(p);
+        String sql = "SELECT id, name, description, scriptName, typeProcess FROM process ORDER BY id";
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(new Process(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getString("scriptName"),
+                        rs.getString("typeProcess")
+                ));
+            }
         }
-
         return list;
     }
 }

@@ -1,9 +1,0 @@
-{
-  "database": {
-    "host": "10.0.3.12",
-    "port": 3306,
-    "username": "etl_user",
-    "password": "123456",
-    "dbname": "dbcontrol"
-  }
-}
