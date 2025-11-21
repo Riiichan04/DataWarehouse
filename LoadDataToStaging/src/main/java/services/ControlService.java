@@ -15,18 +15,6 @@ public class ControlService {
         this.controlDAO = JDBIConnector.getInstance().onDemand(ControlDAO.class);
     }
 
-    public boolean addNewProcess(
-            String name,
-            String description,
-            String scriptName,
-            String typeProcess,
-            int sourceDbId,
-            String sourceTableName,
-            String targetPath
-    ) {
-        return controlDAO.insertProcess(name, description, scriptName, typeProcess, sourceDbId, sourceTableName, targetPath) >= 1;
-    }
-
     public boolean addNewLog(
             int processId,
             Timestamp startTime,

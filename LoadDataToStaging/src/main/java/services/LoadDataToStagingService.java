@@ -2,20 +2,25 @@ package services;
 
 import config.JDBIConnector;
 import dao.StagingDAO;
+import enums.LogLevel;
 import models.CrawlResult;
 import models.Prize;
+import models.ProcessDetail;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LoadDataToStagingService {
     private StagingDAO stagingDAO;
+    private ControlService controlService;
 
     public LoadDataToStagingService() {
         this.stagingDAO = JDBIConnector.getInstance().onDemand(StagingDAO.class);
+        this.controlService = new ControlService();
     }
 
     /**
@@ -57,20 +62,54 @@ public class LoadDataToStagingService {
                 result.add(crawlResult);
             }
             br.close();
+            //Log here
+            controlService.addNewLog(
+                    ProcessDetail.getInstance().getProcessId(),
+                    new Timestamp(System.currentTimeMillis()),
+                    new Timestamp(System.currentTimeMillis()),
+                    LogLevel.SUCCESS.getLevel(),
+                    "Transform data to model success."
+                    );
             return result;
         } catch (Exception e) {
             //Log here
+            controlService.addNewLog(
+                    ProcessDetail.getInstance().getProcessId(),
+                    new Timestamp(System.currentTimeMillis()),
+                    new Timestamp(System.currentTimeMillis()),
+                    LogLevel.ERROR.getLevel(),
+                    "Error when transform data to model. Error detail: " + e.getMessage()
+            );
             return null;
         }
     }
 
     //Load a list model into staging database
     public void loadDataToStaging(List<CrawlResult> listInput) {
-        for (CrawlResult crawlResult : listInput) {
-            //Only insert new data if date not exist
-            if (!stagingDAO.isDateExist(crawlResult.getDate())) {
-                loadModelToStaging(crawlResult);
+        try {
+            for (CrawlResult crawlResult : listInput) {
+                //Only insert new data if date not exist
+                if (!stagingDAO.isDateExist(crawlResult.getDate())) {
+                    loadModelToStaging(crawlResult);
+                }
             }
+
+            controlService.addNewLog(
+                    ProcessDetail.getInstance().getProcessId(),
+                    new Timestamp(System.currentTimeMillis()),
+                    new Timestamp(System.currentTimeMillis()),
+                    LogLevel.ERROR.getLevel(),
+                    "Load data to staging success."
+            );
+        }
+        catch (Exception e) {
+            controlService.addNewLog(
+                    ProcessDetail.getInstance().getProcessId(),
+                    new Timestamp(System.currentTimeMillis()),
+                    new Timestamp(System.currentTimeMillis()),
+                    LogLevel.ERROR.getLevel(),
+                    "Error when load data to staging. Error detail: " + e.getMessage()
+            );
         }
     }
 

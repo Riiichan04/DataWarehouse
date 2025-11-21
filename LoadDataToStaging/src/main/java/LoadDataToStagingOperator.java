@@ -1,5 +1,6 @@
 import config.DatabaseConnection;
 import config.LoadConfigOperator;
+import enums.LogLevel;
 import models.ProcessDetail;
 import services.ControlService;
 import services.LoadDataToStagingService;
@@ -7,6 +8,7 @@ import utils.DirectoryUtil;
 import utils.OffsetLocalDate;
 
 import java.io.File;
+import java.sql.Timestamp;
 
 public class LoadDataToStagingOperator {
     public static void main(String[] args) {
@@ -22,7 +24,7 @@ public class LoadDataToStagingOperator {
             System.out.println("Invalid date offset, used zero offset instead.");
         }
         LoadDataToStagingService service = new LoadDataToStagingService();
-//        ControlService control = new ControlService();
+        ControlService control = new ControlService();
 
         String targetPath = ProcessDetail.getInstance().getTargetPath();
         File[] listFile = DirectoryUtil.getAllFileByDate(targetPath, offset);
@@ -30,12 +32,24 @@ public class LoadDataToStagingOperator {
         if (listFile == null) return;
         for (File file : listFile) {
             try {
-                //FIXME: Add config here
-//                control.addNewProcess();
                 service.transformAndLoadDataToStaging(file);
+                control.addNewLog(
+                        ProcessDetail.getInstance().getProcessId(),
+                        new Timestamp(System.currentTimeMillis()),
+                        new Timestamp(System.currentTimeMillis()),
+                        LogLevel.SUCCESS.getLevel(),
+                        "Load data from " + file.getName() + " to staging database success."
+                );
             }
             catch (Exception e) {
                 //Log here
+                control.addNewLog(
+                        ProcessDetail.getInstance().getProcessId(),
+                        new Timestamp(System.currentTimeMillis()),
+                        new Timestamp(System.currentTimeMillis()),
+                        LogLevel.ERROR.getLevel(),
+                        "Error when load data from " + file.getName() + " to staging database. Error detail: " + e.getMessage()
+                );
             }
         }
     }

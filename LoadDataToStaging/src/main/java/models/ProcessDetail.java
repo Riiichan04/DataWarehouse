@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class ProcessDetail {
     private static ProcessDetail instance;
-    private int processId;
+    private final int processId = 4;
     private String name;
     private String targetPath;
 
@@ -19,8 +19,7 @@ public class ProcessDetail {
         return instance;
     }
 
-    public synchronized void initData(int processId, String name, String targetPath) {
-        this.processId = processId;
+    public synchronized void initData(String name, String targetPath) {
         this.name = name;
         this.targetPath = targetPath;
     }
