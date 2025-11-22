@@ -15,9 +15,12 @@ public class CrawlDataOperator {
             offset = Integer.parseInt(argsOffset);
         } catch (NumberFormatException ignored) {
         }
-        
-        DataSource dataSource = new LoadConfigOperator().loadConfig();
+
+        LoadConfigOperator configLoader = new LoadConfigOperator();
+        configLoader.loadConfig();
+        DataSource dataSource = configLoader.getDataSource();
+
         List<CrawlResult> listResult = CrawlDataService.crawl(dataSource, offset);
-        StoreCrawlDataService.storeCrawlData(dataSource, listResult);
+        StoreCrawlDataService.storeCrawlData(listResult);
     }
 }

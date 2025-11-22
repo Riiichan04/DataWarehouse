@@ -1,18 +1,23 @@
 package services;
 
+import enums.LogLevel;
 import models.CrawlResult;
 import models.DataSource;
+import models.ProcessDetail;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class StoreCrawlDataService {
-    public static void storeCrawlData(DataSource dataSource, List<CrawlResult> listCrawlResult) {
+    private static ControlService controlService = new ControlService();
+
+    public static void storeCrawlData(List<CrawlResult> listCrawlResult) {
         try {
-            String targetPath = dataSource.getTargetPath();
+            String targetPath = ProcessDetail.getInstance().getTargetPath();
             File targetFile = new File(targetPath);
             File parentDir = targetFile.getParentFile();
             if (!parentDir.exists()) {
@@ -28,8 +33,22 @@ public class StoreCrawlDataService {
                 fileWriter.write(body);
             }
             //Log here
+            controlService.addNewLog(
+                    ProcessDetail.getInstance().getProcessId(),
+                    new Timestamp(System.currentTimeMillis()),
+                    new Timestamp(System.currentTimeMillis()),
+                    LogLevel.SUCCESS.getLevel(),
+                    "Save data to staging database success."
+            );
         } catch (Exception e) {
             //Log here
+            controlService.addNewLog(
+                    ProcessDetail.getInstance().getProcessId(),
+                    new Timestamp(System.currentTimeMillis()),
+                    new Timestamp(System.currentTimeMillis()),
+                    LogLevel.SUCCESS.getLevel(),
+                    "Error when saving data to staging database. Error detail: " + e.getMessage()
+            );
             return;
         }
     }

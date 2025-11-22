@@ -14,6 +14,5 @@ public class DataSource {
     private int sourceId;
     private String url;
     private String name;
-    private String targetPath;
     private CrawlType type;
 }

@@ -1,20 +1,25 @@
 package services;
 
 import enums.CrawlType;
+import enums.LogLevel;
 import models.CrawlResult;
 import models.DataSource;
+import models.ProcessDetail;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class CrawlDataService {
+    static ControlService controlService = new ControlService();
+
     public static List<CrawlResult> crawl(DataSource dataSource, int offset) {
         //Always >= 0
         offset = Math.abs(offset);
@@ -33,9 +38,35 @@ public class CrawlDataService {
             Document doc = Jsoup.connect(url)
                     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\"")
                     .timeout(600000).get();   //Timeout 10 minutes
-            return List.of(Objects.requireNonNull(crawlNorthByOffset(doc, offset)));
+            if (crawlType == CrawlType.NORTH) {
+                controlService.addNewLog(
+                        ProcessDetail.getInstance().getProcessId(),
+                        new Timestamp(System.currentTimeMillis()),
+                        new Timestamp(System.currentTimeMillis()),
+                        LogLevel.SUCCESS.getLevel(),
+                        "Crawl north data success"
+                );
+                return List.of(Objects.requireNonNull(crawlNorthByOffset(doc, offset)));
+            }
+            else {
+                controlService.addNewLog(
+                        ProcessDetail.getInstance().getProcessId(),
+                        new Timestamp(System.currentTimeMillis()),
+                        new Timestamp(System.currentTimeMillis()),
+                        LogLevel.SUCCESS.getLevel(),
+                        "Crawl " + (crawlType == CrawlType.MIDDLE ? "middle" : "southern") + " data success"
+                );
+                return crawlSouthOrMiddleByOffset(doc, offset);
+            }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            controlService.addNewLog(
+                    ProcessDetail.getInstance().getProcessId(),
+                    new Timestamp(System.currentTimeMillis()),
+                    new Timestamp(System.currentTimeMillis()),
+                    LogLevel.ERROR.getLevel(),
+                    "Error when crawl data. Error detail: " + e.getMessage()
+            );
+            return null;
         }
     }
 
