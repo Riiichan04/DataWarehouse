@@ -87,6 +87,8 @@ public class LoadDataToStagingService {
     //Load a list model into staging database
     public void loadDataToStaging(List<CrawlResult> listInput) {
         try {
+            //Truncate old data in staging
+            stagingDAO.truncateStaging();
             for (CrawlResult crawlResult : listInput) {
                 //Only insert new data if date not exist
                 if (!stagingDAO.isDateExist(crawlResult.getDate())) {
