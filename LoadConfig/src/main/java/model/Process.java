@@ -13,5 +13,5 @@ public class Process {
     private String description;
     private String scriptName;
     private String typeProcess;
-
+    private String targetPath;
 }

@@ -40,7 +40,7 @@ public class LoadConfigOperator {
 
                 List<SourceConfig> sourceConfigs = sourceService.getListActiveSources(conn);
                 List<DatabaseConfig> databases = dbService.getActiveDatabases(conn);
-                List<Process> processes = processService.getAllProcesses(conn);
+                List<Process> processes = processService.getAllProcesses(conn,runDate);
 
                 JSONObject runtimeJSON = new JSONObject();
                 runtimeJSON.put("runDate", runDate);
