@@ -52,7 +52,7 @@ public class LoadConfigOperator {
             String port = configJson.get("port").getAsString();
             String username = configJson.get("username").getAsString();
             String password = configJson.get("password").getAsString();
-            String characterEncoding = configJson.get("characterEncoding").getAsString();
+            String options = configJson.get("options").getAsString();
 
             DatabaseConnection databaseConnection;
             databaseConnection = new DatabaseConnection();
@@ -62,7 +62,7 @@ public class LoadConfigOperator {
             databaseConnection.setPort(port);
             databaseConnection.setUsername(username);
             databaseConnection.setPassword(password);
-            databaseConnection.setCharacterEncoding(characterEncoding);
+            databaseConnection.setOptions(options);
             return databaseConnection;
         } catch (Exception e) {
             return null;
