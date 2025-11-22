@@ -14,6 +14,8 @@ import models.ProcessDetail;
 import services.ControlService;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
 
@@ -23,11 +25,11 @@ import java.sql.Timestamp;
 @Setter
 public class LoadConfigOperator {
     private String configPath = "/config/configLoader.jar";
+    private String configJsonPath = "/config/config.json";
     private String logMessage = "";
     private ControlService service = new ControlService();
 
-    public DatabaseConnection loadConfig() {
-
+    public DatabaseConnection loadStagingDatabase() {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", configPath);
             processBuilder.redirectErrorStream(true);
@@ -115,31 +117,63 @@ public class LoadConfigOperator {
         }
     }
 
+    public DatabaseConnection loadControlDatabase() {
+        File file = new File(configJsonPath);
+        if (!file.exists()) {
+            System.out.println("Config file not found.");
+            return null;
+        }
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            StringBuilder jsonContent = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                jsonContent.append(line);
+            }
+            br.close();
+            JsonObject jsonInput = JsonParser.parseString(jsonContent.toString()).getAsJsonObject();
+
+            return createDatabaseConnection(jsonInput);
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
     private DatabaseConnection extractJsonResultToDatabaseConnection(JsonObject json, StorageType storageType) {
         try {
-            String databaseType = storageType == StorageType.STAGING ? "staging" : "warehouse";
-            JsonObject jsonInput = json.getAsJsonObject("database_" + databaseType);
-
-            String name = jsonInput.get("name").getAsString();
-            String type = jsonInput.get("type").getAsString();
-            String host = jsonInput.get("host").getAsString();
-            String port = jsonInput.get("port").getAsString();
-            String username = jsonInput.get("username").getAsString();
-            String password = jsonInput.get("password").getAsString();
-            String characterEncoding = jsonInput.get("characterEncoding").getAsString();
-
-            DatabaseConnection databaseConnection;
-            databaseConnection = new DatabaseConnection();
-            databaseConnection.setName(name);
-            databaseConnection.setType(type);
-            databaseConnection.setHost(host);
-            databaseConnection.setPort(port);
-            databaseConnection.setUsername(username);
-            databaseConnection.setPassword(password);
-            databaseConnection.setCharacterEncoding(characterEncoding);
-            return databaseConnection;
+            JsonArray listDb = json.getAsJsonArray("db");
+            for (JsonElement db : listDb) {
+                JsonObject jsonInput = db.getAsJsonObject();
+                int dbType = jsonInput.get("type").getAsInt();
+                if (dbType == storageType.getType()) {
+                    return createDatabaseConnection(jsonInput);
+                }
+            }
+            return null;
         } catch (Exception e) {
             return null;
         }
+    }
+
+    private DatabaseConnection createDatabaseConnection(JsonObject jsonInput) {
+        String name = jsonInput.get("name").getAsString();
+        String type = jsonInput.get("type").getAsString();
+        String host = jsonInput.get("host").getAsString();
+        String port = jsonInput.get("port").getAsString();
+        String username = jsonInput.get("username").getAsString();
+        String password = jsonInput.get("password").getAsString();
+        String options = jsonInput.get("options").getAsString();
+
+        DatabaseConnection databaseConnection;
+        databaseConnection = new DatabaseConnection();
+        databaseConnection.setName(name);
+        databaseConnection.setType(type);
+        databaseConnection.setHost(host);
+        databaseConnection.setPort(port);
+        databaseConnection.setUsername(username);
+        databaseConnection.setPassword(password);
+        databaseConnection.setOptions(options);
+        return databaseConnection;
     }
 }

@@ -2,20 +2,20 @@ package config;
 
 import org.jdbi.v3.core.Jdbi;
 
-public class JDBIConnector {
+public class ControlConnector {
     static Jdbi jdbi;
 
-    private static Jdbi createJdbi() {
+    public static Jdbi createJdbi() {
         if (jdbi == null) {
             LoadConfigOperator config = new LoadConfigOperator();
-            DatabaseConnection connection = config.loadConfig();
+            DatabaseConnection connection = config.loadControlDatabase();
             jdbi = Jdbi.create(connection.getConnection());
             jdbi.installPlugins();
         }
         return jdbi;
     }
 
-    public static Jdbi getInstance() {
+    static Jdbi getInstance() {
         if (jdbi == null) {
             jdbi = createJdbi();
         }

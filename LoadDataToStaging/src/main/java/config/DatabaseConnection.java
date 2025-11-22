@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import services.ControlService;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,7 +20,7 @@ public class DatabaseConnection {
     private String port;
     private String username;
     private String password;
-    private String characterEncoding;
+    private String options;
     private static final String MYSQL_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static Connection connection = null;
 
@@ -40,7 +39,7 @@ public class DatabaseConnection {
     private void createConnection() throws SQLException {
         try {
             Class.forName(MYSQL_DRIVER);
-            String connectionString = "jdbc:mysql://" + host + ":" + port + "/" + name + "?" + characterEncoding;
+            String connectionString = "jdbc:mysql://" + host + ":" + port + "/" + name + "?" + options;
             connection = DriverManager.getConnection(connectionString, username, password);
         } catch (ClassNotFoundException ignored) {
         }
