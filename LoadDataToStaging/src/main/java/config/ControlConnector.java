@@ -15,7 +15,7 @@ public class ControlConnector {
         return jdbi;
     }
 
-    static Jdbi getInstance() {
+    public static Jdbi getInstance() {
         if (jdbi == null) {
             jdbi = createJdbi();
         }

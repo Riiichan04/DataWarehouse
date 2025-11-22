@@ -1,6 +1,6 @@
 package services;
 
-import config.JDBIConnector;
+import config.ControlConnector;
 import dao.ControlDAO;
 import dao.StagingDAO;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -12,7 +12,7 @@ public class ControlService {
 
     //Config control later
     public ControlService() {
-        this.controlDAO = JDBIConnector.getInstance().onDemand(ControlDAO.class);
+        this.controlDAO = ControlConnector.getInstance().onDemand(ControlDAO.class);
     }
 
     public boolean addNewLog(

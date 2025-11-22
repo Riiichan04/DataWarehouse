@@ -15,7 +15,7 @@ public class StagingConnector {
         return jdbi;
     }
 
-    static Jdbi getInstance() {
+    public static Jdbi getInstance() {
         if (jdbi == null) {
             jdbi = createJdbi();
         }

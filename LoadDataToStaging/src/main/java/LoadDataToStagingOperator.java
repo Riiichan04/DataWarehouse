@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 
 public class LoadDataToStagingOperator {
     public static void main(String[] args) {
+        //Get offset from param, default is 0 0 0 0
         OffsetLocalDate offset = new OffsetLocalDate();
         try {
             offset = new OffsetLocalDate(
@@ -23,13 +24,15 @@ public class LoadDataToStagingOperator {
         } catch (NumberFormatException e) {
             System.out.println("Invalid date offset, used zero offset instead.");
         }
+        //Service
         LoadDataToStagingService service = new LoadDataToStagingService();
         ControlService control = new ControlService();
-
+        //Get targetPath
         String targetPath = ProcessDetail.getInstance().getTargetPath();
         File[] listFile = DirectoryUtil.getAllFileByDate(targetPath, offset);
 
         if (listFile == null) return;
+        //Get all file and load to staging
         for (File file : listFile) {
             try {
                 service.transformAndLoadDataToStaging(file);

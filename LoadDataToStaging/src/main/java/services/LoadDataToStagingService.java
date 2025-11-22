@@ -1,6 +1,6 @@
 package services;
 
-import config.JDBIConnector;
+import config.StagingConnector;
 import dao.StagingDAO;
 import enums.LogLevel;
 import models.CrawlResult;
@@ -19,7 +19,7 @@ public class LoadDataToStagingService {
     private ControlService controlService;
 
     public LoadDataToStagingService() {
-        this.stagingDAO = JDBIConnector.getInstance().onDemand(StagingDAO.class);
+        this.stagingDAO = StagingConnector.getInstance().onDemand(StagingDAO.class);
         this.controlService = new ControlService();
     }
 
