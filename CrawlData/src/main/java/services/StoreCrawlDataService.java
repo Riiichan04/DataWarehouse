@@ -25,7 +25,7 @@ public class StoreCrawlDataService {
                 //Log here
             }
 
-            String header = "date,companyName,prize1,prize2,prize3,prize4,prize5,prize6,prize7,prize8,prizeSpecial\n";
+            String header = "date,companyName,regionName,prize1,prize2,prize3,prize4,prize5,prize6,prize7,prize8,prizeSpecial\n";
             String body = listCrawlResult.stream().map(StoreCrawlDataService::processCrawlResult).collect(Collectors.joining("\n"));
 
             try (FileWriter fileWriter = new FileWriter(targetFile)) {
@@ -54,7 +54,7 @@ public class StoreCrawlDataService {
     }
 
     private static String processCrawlResult(CrawlResult crawlResult) {
-        StringBuilder result = new StringBuilder(crawlResult.getDate() + "," + crawlResult.getName() + ",");
+        StringBuilder result = new StringBuilder(crawlResult.getDate() + "," + crawlResult.getName() + "," + crawlResult.getRegionName() + ",");
         int size = crawlResult.getListPrize().size();
         for (int i = 0; i < size; i++) {
             //Handle case CrawlType.NORTH only have 8 prizes instead of 9

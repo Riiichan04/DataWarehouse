@@ -56,7 +56,7 @@ public class CrawlDataService {
                         LogLevel.SUCCESS.getLevel(),
                         "Crawl " + (crawlType == CrawlType.MIDDLE ? "middle" : "southern") + " data success"
                 );
-                return crawlSouthOrMiddleByOffset(doc, offset);
+                return crawlSouthOrMiddleByOffset(doc, offset, crawlType);
             }
         } catch (IOException e) {
             controlService.addNewLog(
@@ -99,10 +99,10 @@ public class CrawlDataService {
         }
 
         //Temp result
-        return new CrawlResult("Xổ số miền Bắc", dateString, listResult);
+        return new CrawlResult("Xổ số miền Bắc", "Miền Bắc", dateString, listResult);
     }
 
-    private static List<CrawlResult> crawlSouthOrMiddleByOffset(Document doc, int offset) {
+    private static List<CrawlResult> crawlSouthOrMiddleByOffset(Document doc, int offset, CrawlType type) {
         // JS: date.getTime() - dateOffset * (...)
         LocalDate today = LocalDate.now();
         LocalDate resultDate = today.minusDays(offset);
@@ -151,6 +151,7 @@ public class CrawlDataService {
         for (int i = 0; i < listHeader.size(); i++) {
             finalResult.add(new CrawlResult(
                     listHeader.get(i),   // name
+                    (type == CrawlType.MIDDLE ? "Miền Trung" : "Miền Nam"),
                     dateString,          // date
                     listResultTemp.get(i) // listPrize
             ));

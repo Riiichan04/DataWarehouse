@@ -13,5 +13,6 @@ import java.util.List;
 public class CrawlResult {
     private String name;
     private String date;
+    private String regionName;
     private List<String> listPrize;
 }
