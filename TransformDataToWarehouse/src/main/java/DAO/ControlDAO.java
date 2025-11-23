@@ -2,13 +2,17 @@ package DAO;
 
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.SqlCall;
-import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
 public interface ControlDAO {
-   @SqlQuery("""
-           SELECT check_transform_dw_dependent_process()
+   @SqlCall("""
+           SELECT check_transform_dw_dependent_process(:processId)
            """)
-    boolean checkTransformDWDependentProcess();
+    boolean checkTransformDWDependentProcess(@Bind("processId") int processId);
+
+    @SqlCall("""
+           SELECT check_completed_process(:processId)
+           """)
+    boolean checkCompletedProcess(@Bind("processId") int processId);
 
    @SqlCall("""
            CALL start_process(:processId)

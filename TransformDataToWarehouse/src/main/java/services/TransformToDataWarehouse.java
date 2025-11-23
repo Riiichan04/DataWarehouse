@@ -3,7 +3,6 @@ package services;
 import DAO.ControlDAO;
 import DAO.StagingDAO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import config.JDBIConnector;
 import models.*;
 
@@ -23,8 +22,11 @@ public class TransformToDataWarehouse {
     }
 
     public void transformFact() {
+        // Check tiến trình đã hoàn thành trong ngày chưa
+        if(!controlDAO.checkCompletedProcess(5)) return;
+
         // Check tiến trình bắt buộc đã chạy chưa
-        if(!controlDAO.checkTransformDWDependentProcess()) return;
+        if(!controlDAO.checkTransformDWDependentProcess(5)) return;
         //Ghi log
         int logId = controlDAO.startTransformProcess(5);
         boolean changeDimCompany = false;
