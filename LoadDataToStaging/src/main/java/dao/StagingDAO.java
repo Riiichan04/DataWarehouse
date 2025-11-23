@@ -16,8 +16,8 @@ public interface StagingDAO {
 
     //Insert new data into staging
     @SqlUpdate("""
-        insert into lottery_staging(date, prizeName, companyName, result, createdAt)
-        values(:date, :prizeName, :companyName, :result, :createdAt)
+        insert into lottery_staging(date, prizeName, companyName, result, createdAt, regionName)
+        values(:date, :prizeName, :companyName, :result, :createdAt, :regionName)
     """)
     @RegisterBeanMapper(CrawlResult.class)
     int loadDataToStaging(@BindBean CrawlResult result);

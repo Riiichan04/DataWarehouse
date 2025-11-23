@@ -17,5 +17,6 @@ public class CrawlResult {
     private String date;
     private String companyName;
     private String createdAt;
+    private String regionName;
     private List<Prize> listPrize;
 }

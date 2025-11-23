@@ -51,14 +51,15 @@ public class LoadDataToStagingService {
                 String date = parsedLine[0];
                 String companyName = parsedLine[1];
                 String createdAt = parsedLine[2];
-                List<String> prizeString = List.of(parsedLine).subList(3, parsedLine.length);
+                String regionName = parsedLine[3];
+                List<String> prizeString = List.of(parsedLine).subList(4, parsedLine.length);
                 List<Prize> listPrize = new ArrayList<>();
 
                 for (int i = 0; i < parsedLine.length; i++) {
                     listPrize.add(new Prize("Giải " + i, prizeString.get(i)));
                 }
 
-                CrawlResult crawlResult = new CrawlResult(date, companyName, createdAt, listPrize);
+                CrawlResult crawlResult = new CrawlResult(date, companyName, createdAt, regionName, listPrize);
                 result.add(crawlResult);
             }
             br.close();
