@@ -16,7 +16,7 @@ public interface ControlDAO {
     int startLoadDimProcess(@Bind("processId") int processId);
 
     @SqlCall("""
-           CALL record_transform_dw_log(:logId, :message, :status)
+           CALL record_log(:logId, :message, :status)
            """)
     void recordTransformDWLog(@Bind("logId") int logId, @Bind("message") String message, @Bind("status") int status);
 

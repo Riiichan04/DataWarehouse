@@ -32,7 +32,7 @@ public class ConfigLoader {
                 config.getProperty(prefix + "port"),
                 config.getProperty(prefix + "username"),
                 config.getProperty(prefix + "password"),
-                "useUnicode=true&characterEncoding=UTF-8" // Giả định encoding
+                "useUnicode=true&characterEncoding=UTF-8"
         );
     }
 

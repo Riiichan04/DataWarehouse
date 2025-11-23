@@ -11,11 +11,11 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DimCompany {
+public class DimPrize {
     private int id;
-    private String codeCompany;
+    private String codePrize;
     private String name;
-    private int regionId;
     private Timestamp createdAt;
     private Timestamp expiredAt;
+
 }

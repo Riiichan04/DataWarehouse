@@ -18,16 +18,16 @@ public interface ControlDAO {
    @SqlQuery("""
            CALL start_process(:processId)
            """)
-   int startTransformProcess(@Bind("processId") int processId);
+   int startLoadProcess(@Bind("processId") int processId);
 
    @SqlCall("""
            CALL record_log(:logId, :message, :status)
            """)
-    void recordTransformDWLog(@Bind("logId") int logId, @Bind("message") String message, @Bind("status") int status);
+    void recordLoadDWLog(@Bind("logId") int logId, @Bind("message") String message, @Bind("status") int status);
 
    @SqlQuery("""
-           CALL get_export_dir_transform_dw(:processId)
+           CALL get_source_path_load(:processId)
            """)
-    String getExportDirTransformDw(@Bind("processId") int processId);
+    String getSourcePath(@Bind("processId") int processId);
 
 }

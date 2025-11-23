@@ -15,7 +15,6 @@ public class DimCompany {
     private int id;
     private String codeCompany;
     private String name;
-    private int regionId;
     private Timestamp createdAt;
     private Timestamp expiredAt;
 }

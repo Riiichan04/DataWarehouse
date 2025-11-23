@@ -26,8 +26,8 @@ public class ConfigLoader {
         return createDbConnection("db.control.");
     }
 
-    public static DatabaseConnection loadStagingDBConfig() {
-        return createDbConnection("db.staging.");
+    public static DatabaseConnection loadWarehouseDBConfig() {
+        return createDbConnection("db.warehouse.");
     }
 
 }
