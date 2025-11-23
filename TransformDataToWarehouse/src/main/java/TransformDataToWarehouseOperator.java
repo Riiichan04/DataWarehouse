@@ -1,3 +1,8 @@
-//FIXME: This is a temp file for defining structure
+import services.TransformToDataWarehouse;
+
 public class TransformDataToWarehouseOperator {
+    public static void main(String[] args) {
+        TransformToDataWarehouse transform = new TransformToDataWarehouse();
+        transform.transform();
+    }
 }

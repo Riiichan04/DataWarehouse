@@ -14,21 +14,23 @@ import java.util.List;
 import java.util.Map;
 
 public class TransformToDataWarehouse {
-    private StagingDAO stagingDAO;
-    private ControlDAO controlDAO;
+    private static final int PROCESS_TRANSFORM_ID = 5;
+    private static final int PROCESS_LOAD_DIM_ID = 6;
+    private final StagingDAO stagingDAO;
+    private final ControlDAO controlDAO;
     public TransformToDataWarehouse() {
         stagingDAO = JDBIConnector.getStagingInstance().onDemand(StagingDAO.class);
         controlDAO = JDBIConnector.getControlInstance().onDemand(ControlDAO.class);
     }
 
-    public void transformFact() {
+    public void transform() {
         // Check tiến trình đã hoàn thành trong ngày chưa
-        if(!controlDAO.checkCompletedProcess(5)) return;
+        if(!controlDAO.checkCompletedProcess(PROCESS_TRANSFORM_ID)) return;
 
         // Check tiến trình bắt buộc đã chạy chưa
-        if(!controlDAO.checkTransformDWDependentProcess(5)) return;
+        if(!controlDAO.checkTransformDWDependentProcess(PROCESS_TRANSFORM_ID)) return;
         //Ghi log
-        int logId = controlDAO.startTransformProcess(5);
+        int logId = controlDAO.startTransformProcess(PROCESS_TRANSFORM_ID);
         boolean changeDimCompany = false;
         boolean changeDimPrize = false;
         try {
@@ -72,7 +74,7 @@ public class TransformToDataWarehouse {
             return;
         }
 
-        final String FILE_PATH = controlDAO.getExportDirTransformDw(5); // đường dẫn file JSON
+        final String FILE_PATH = controlDAO.getExportDirTransformDw(PROCESS_TRANSFORM_ID); // đường dẫn file JSON
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -92,9 +94,9 @@ public class TransformToDataWarehouse {
     }
 
     private void exportFileDimJSON(boolean changeDimCompany, boolean changeDimPrize) {
-        int logId = controlDAO.startTransformProcess(6);
+        int logId = controlDAO.startTransformProcess(PROCESS_LOAD_DIM_ID);
 
-        final String FILE_PATH = controlDAO.getExportDirTransformDw(6); // đường dẫn file JSON
+        final String FILE_PATH = controlDAO.getExportDirTransformDw(PROCESS_LOAD_DIM_ID); // đường dẫn file JSON
 
         ObjectMapper mapper = new ObjectMapper();
 

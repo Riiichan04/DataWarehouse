@@ -9,6 +9,7 @@ import models.DimDate;
 import java.util.List;
 
 public class LoadDimDataWarehouseToStaging {
+    private static final int PROCESS_ID = 9;
     private final ControlDAO  controlDAO;
     private final StagingDAO stagingDAO;
     private final WarehouseDAO warehouseDAO;
@@ -20,9 +21,9 @@ public class LoadDimDataWarehouseToStaging {
 
     public void loadDimDataWarehouseToStaging() {
         // Check tiến trình đã được hoàn thành trong ngày chưa
-        if(controlDAO.checkCompletedProcess(9)) return;
+        if(controlDAO.checkCompletedProcess(PROCESS_ID)) return;
         // Ghi log
-        int logId = controlDAO.startLoadDimProcess(9);
+        int logId = controlDAO.startLoadDimProcess(PROCESS_ID);
         try {
             String companyJson = warehouseDAO.getDimCompanyJSON();
             String regionJson = warehouseDAO.getDimRegionJSON();
