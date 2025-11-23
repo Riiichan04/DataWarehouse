@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 @Getter
@@ -16,6 +15,6 @@ public class DimCompany {
     private int id;
     private String codeCompany;
     private String name;
-    private Timestamp createDate;
-    private Date expiredDate;
+    private Timestamp createdAt;
+    private Timestamp expiredAt;
 }

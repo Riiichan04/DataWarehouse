@@ -6,7 +6,17 @@ public class ConfigLoader {
     // Cần xem lại
     private static final Properties config = new Properties();
     static {
-        //load config
+        //load config (temp)
+        config.setProperty("db.staging.name", "");
+        config.setProperty("db.staging.host", "");
+        config.setProperty("db.staging.port", "");
+        config.setProperty("db.staging.username", "");
+        config.setProperty("db.staging.password", "");
+        config.setProperty("db.control.name", "");
+        config.setProperty("db.control.host", "");
+        config.setProperty("db.control.port", "");
+        config.setProperty("db.control.username", "");
+        config.setProperty("db.control.password", "");
     }
 
     private static DatabaseConnection createDbConnection(String prefix) {

@@ -25,7 +25,7 @@ public class TransformToDataWarehouse {
 
     public void transform() {
         // Check tiến trình đã hoàn thành trong ngày chưa
-        if(!controlDAO.checkCompletedProcess(PROCESS_TRANSFORM_ID)) return;
+        if(controlDAO.checkCompletedProcess(PROCESS_TRANSFORM_ID)) return;
 
         // Check tiến trình bắt buộc đã chạy chưa
         if(!controlDAO.checkTransformDWDependentProcess(PROCESS_TRANSFORM_ID)) return;
@@ -46,7 +46,7 @@ public class TransformToDataWarehouse {
                 int prizeSk = (stagingRecord.getPrizeName() == null) ? -1: stagingDAO.getPrizeSK(stagingRecord.getPrizeName());
 
                 if (companySk == 0) {
-                    companySk = stagingDAO.insertCompany(stagingRecord.getCompanyName());
+                    companySk = stagingDAO.insertCompany(stagingRecord.getCompanyName(), stagingRecord.getRegionName());
                     changeDimCompany = true;
 
                 }
@@ -58,13 +58,22 @@ public class TransformToDataWarehouse {
                 FactLottery fact = new FactLottery(dateSk, prizeSk, companySk, stagingRecord.getResult());
                 transformedFacts.add(fact);
             }
-
+            // Xuất file fact
             exportFileFactJSON(transformedFacts, logId);
+            // Có dim mới
             if (changeDimCompany || changeDimPrize) {
+                // Xuất file dim
                 exportFileDimJSON(changeDimCompany, changeDimPrize);
+            } else {
+                // Xóa file dim cũ nếu tồn tại
+                final String FILE_PATH = controlDAO.getExportDirTransformDw(PROCESS_LOAD_DIM_ID); // đường dẫn file JSON
+                File file = new File(FILE_PATH);
+                if (file.exists()) {
+                    file.delete();
+                }
             }
         } catch (Exception e) {
-            controlDAO.recordTransformDWLog(logId, e.getMessage(), 100);
+            e.printStackTrace();
         }
 
     }
@@ -73,7 +82,6 @@ public class TransformToDataWarehouse {
         if (transformedFacts.isEmpty()) {
             return;
         }
-
         final String FILE_PATH = controlDAO.getExportDirTransformDw(PROCESS_TRANSFORM_ID); // đường dẫn file JSON
 
         ObjectMapper mapper = new ObjectMapper();
@@ -95,7 +103,6 @@ public class TransformToDataWarehouse {
 
     private void exportFileDimJSON(boolean changeDimCompany, boolean changeDimPrize) {
         int logId = controlDAO.startTransformProcess(PROCESS_LOAD_DIM_ID);
-
         final String FILE_PATH = controlDAO.getExportDirTransformDw(PROCESS_LOAD_DIM_ID); // đường dẫn file JSON
 
         ObjectMapper mapper = new ObjectMapper();

@@ -2,14 +2,15 @@ package DAO;
 
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.SqlCall;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
 public interface ControlDAO {
-    @SqlCall("""
+    @SqlQuery("""
            SELECT check_completed_process(:processId)
            """)
     boolean checkCompletedProcess(@Bind("processId") int processId);
 
-    @SqlCall("""
+    @SqlQuery("""
            CALL start_process(:processId)
            """)
     int startLoadDimProcess(@Bind("processId") int processId);

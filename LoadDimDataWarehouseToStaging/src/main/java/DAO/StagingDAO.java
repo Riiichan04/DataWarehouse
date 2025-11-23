@@ -1,6 +1,7 @@
 package DAO;
 
 import models.DimDate;
+import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlCall;
@@ -10,9 +11,9 @@ import java.util.List;
 
 public interface StagingDAO {
     @SqlCall("""
-            CALL insert_all_dim_company(:companyJson, :regionJson, :prizeJson)
+            CALL insert_dim(:companyJson, :regionJson, :prizeJson)
             """)
-    void loadDimStaging(String companyJson, String regionJson, String prizeJson);
+    void loadDimStaging(@Bind("companyJson") String companyJson, @Bind("regionJson") String regionJson, @Bind("prizeJson") String prizeJson);
 
     @SqlUpdate("""
         TRUNCATE TABLE dim_date;

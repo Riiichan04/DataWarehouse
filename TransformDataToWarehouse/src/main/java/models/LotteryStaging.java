@@ -14,6 +14,7 @@ public class LotteryStaging {
     private String date;
     private String companyName;
     private String prizeName;
+    private String regionName;
     private String result;
     private String createdAt;
 
