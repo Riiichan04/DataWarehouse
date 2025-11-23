@@ -47,6 +47,7 @@
     </dependencies>
 
     <build>
+        <finalName>warehouseTransformer</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
