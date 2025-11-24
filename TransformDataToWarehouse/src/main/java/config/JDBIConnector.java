@@ -10,7 +10,7 @@ public class JDBIConnector {
 
     public static Jdbi getStagingInstance() {
         if (stagingJdbi == null) {
-            DatabaseConnection stagingConfig = ConfigLoader.loadStagingDBConfig();
+            DatabaseConnection stagingConfig = new ConfigLoader().loadStagingDBConfig();
             String url = "jdbc:mysql://" + stagingConfig.getHost() + ":" + stagingConfig.getPort() + "/" + stagingConfig.getName() + "?" + stagingConfig.getCharacterEncoding();
             stagingJdbi = Jdbi.create(url, stagingConfig.getUsername(), stagingConfig.getPassword());
             stagingJdbi.installPlugin(new SqlObjectPlugin());
@@ -20,7 +20,7 @@ public class JDBIConnector {
 
     public static Jdbi getControlInstance() {
         if (controlJdbi == null) {
-            DatabaseConnection controlConfig = ConfigLoader.loadControlDBConfig();
+            DatabaseConnection controlConfig = new ConfigLoader().loadControlDBConfig();
             String url = "jdbc:mysql://" + controlConfig.getHost() + ":" + controlConfig.getPort() + "/" + controlConfig.getName() + "?" + controlConfig.getCharacterEncoding();
             controlJdbi = Jdbi.create(url, controlConfig.getUsername(), controlConfig.getPassword());
             controlJdbi.installPlugin(new SqlObjectPlugin());

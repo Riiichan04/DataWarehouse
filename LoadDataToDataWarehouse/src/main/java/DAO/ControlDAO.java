@@ -30,4 +30,9 @@ public interface ControlDAO {
            """)
     String getSourcePath(@Bind("processId") int processId);
 
+   @SqlQuery("""
+           SELECT CAST(AES_DECRYPT(:encoderPassword, :key) AS CHAR(255)) AS ssn_decrypted
+           """)
+    String getDecoderPassword(@Bind("encoderPassword") String encoderPassword, @Bind("key") String key);
+
 }
