@@ -13,7 +13,7 @@ public class AggregateService {
 
     public AggregateService() {
         controlService = new ControlService();
-//        aggerateDAO = WarehouseConnector.getInstance().onDemand(AggerateDAO.class);
+        aggerateDAO = WarehouseConnector.getInstance().onDemand(AggregateDAO.class);
     }
 
     public void statisticAggerateData() {
@@ -25,11 +25,21 @@ public class AggregateService {
                 aggerateDAO.truncateAggHistoryPrizes();
                 aggerateDAO.truncateAggResultFrequencies();
                 aggerateDAO.truncateAggPairFrequencies();
+                aggerateDAO.truncateAggRegionResultFrequencies();
 
                 aggerateDAO.statisticMostAppearReward();
                 aggerateDAO.statisticResultFrequencies();
                 aggerateDAO.statisticPairFrequencies();
+                aggerateDAO.statisticRegionResultFrequencies();
             });
+
+            controlService.addNewLog(
+                    ProcessDetail.getInstance().getProcessId(),
+                    new Timestamp(System.currentTimeMillis()),
+                    new Timestamp(System.currentTimeMillis()),
+                    LogLevel.ERROR.getLevel(),
+                    "Insert aggregate data successful."
+            );
         }
         catch (Exception e) {
             //Log error
@@ -38,7 +48,7 @@ public class AggregateService {
                     new Timestamp(System.currentTimeMillis()),
                     new Timestamp(System.currentTimeMillis()),
                     LogLevel.ERROR.getLevel(),
-                    "Insert aggregate data failed."
+                    "Insert aggregate data failed. Error detail " + e.getMessage()
             );
         }
     }
