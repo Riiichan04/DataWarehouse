@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import models.DataSource;
 import models.ProcessDetail;
-import services.ControlService;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,7 +27,6 @@ public class LoadConfigOperator {
     private String configControl = "/config/config.json";
     private String configPath = "/config/configLoader.jar";
     private String logMessage = "";
-    private ControlService service = new ControlService();
     private DataSource dataSource;
 
     public DatabaseConnection loadDatabaseConfig() {

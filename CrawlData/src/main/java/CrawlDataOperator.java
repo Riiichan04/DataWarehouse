@@ -10,10 +10,10 @@ public class CrawlDataOperator {
     public static void main(String[] args) {
         //Will be changed later
         int offset = 0;
-        String argsOffset = args[0];
         try {
+            String argsOffset = args[0];
             offset = Integer.parseInt(argsOffset);
-        } catch (NumberFormatException ignored) {
+        } catch (Exception ignored) {
         }
 
         LoadConfigOperator configLoader = new LoadConfigOperator();
