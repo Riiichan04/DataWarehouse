@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -68,10 +70,14 @@ public class LoadConfigOperator {
         }
     }
 
-    public void loadConfig(String dataSourceType) {
+    public void loadConfig(String dataSourceType, int offset) {
         this.dataSourceType = dataSourceType;
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", configPath, "0", "0", "0", "0", configControl);
+            String offsetDay = "0";
+            if (offset != 0) {
+                offsetDay = String.valueOf(-1 * Math.abs(offset));
+            }
+            ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", configPath, offsetDay, "0", "0", "0", configControl);
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
 
@@ -83,6 +89,7 @@ public class LoadConfigOperator {
                 commandResult.append(line);
             }
             br.close();
+
             //Get exit code
             int exitCode = process.waitFor();
             if (exitCode != 0) {

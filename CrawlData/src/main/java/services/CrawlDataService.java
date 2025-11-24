@@ -91,7 +91,7 @@ public class CrawlDataService {
         }
 
         //Temp result
-        return new CrawlResult("Xổ số miền Bắc", "Miền Bắc", dateString, listResult);
+        return new CrawlResult("Xổ số miền Bắc", dateString, "Miền Bắc", listResult);
     }
 
     private static List<CrawlResult> crawlSouthOrMiddleByOffset(Document doc, int offset, CrawlType type) {
@@ -143,8 +143,8 @@ public class CrawlDataService {
         for (int i = 0; i < listHeader.size(); i++) {
             finalResult.add(new CrawlResult(
                     listHeader.get(i),   // name
-                    (type == CrawlType.MIDDLE ? "Miền Trung" : "Miền Nam"),
                     dateString,          // date
+                    (type == CrawlType.MIDDLE ? "Miền Trung" : "Miền Nam"),
                     listResultTemp.get(i) // listPrize
             ));
         }

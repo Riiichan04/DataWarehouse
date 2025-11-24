@@ -9,6 +9,8 @@ public class StagingConnector {
         if (jdbi == null) {
             LoadConfigOperator config = new LoadConfigOperator();
             DatabaseConnection connection = config.loadStagingDatabase();
+            System.out.println(connection.toString());
+            System.out.println(connection.getConnection().toString());
             jdbi = Jdbi.create(connection.getConnection());
             jdbi.installPlugins();
         }

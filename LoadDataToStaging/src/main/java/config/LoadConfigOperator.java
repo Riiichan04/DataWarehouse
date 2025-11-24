@@ -31,7 +31,7 @@ public class LoadConfigOperator {
     public DatabaseConnection loadStagingDatabase() {
         ControlService service = new ControlService();
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", configPath);
+            ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", configPath,  "0", "0", "0", "0", configJsonPath);
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
 
@@ -79,7 +79,6 @@ public class LoadConfigOperator {
             String processName = jsonProcess.get("name").getAsString();
             String processTarget = jsonProcess.get("targetPath").getAsString();
             processDetail.initData(processName, processTarget);
-
             DatabaseConnection result = extractJsonResultToDatabaseConnection(jsonResult, StorageType.STAGING);
             //If result != null
             if (result != null) {
@@ -146,7 +145,7 @@ public class LoadConfigOperator {
             for (JsonElement db : listDb) {
                 JsonObject jsonInput = db.getAsJsonObject();
                 int dbType = jsonInput.get("type").getAsInt();
-                if (dbType == storageType.getType()) {
+                if (dbType == storageType.getId()) {
                     return createDatabaseConnection(jsonInput);
                 }
             }
@@ -163,7 +162,6 @@ public class LoadConfigOperator {
         String port = jsonInput.get("port").getAsString();
         String username = jsonInput.get("username").getAsString();
         String password = jsonInput.get("password").getAsString();
-        String options = jsonInput.get("options").getAsString();
 
         DatabaseConnection databaseConnection;
         databaseConnection = new DatabaseConnection();
@@ -173,7 +171,7 @@ public class LoadConfigOperator {
         databaseConnection.setPort(port);
         databaseConnection.setUsername(username);
         databaseConnection.setPassword(password);
-        databaseConnection.setOptions(options);
+        databaseConnection.setOptions("useUnicode=true&characterEncoding=UTF-8");
         return databaseConnection;
     }
 }

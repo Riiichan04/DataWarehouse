@@ -22,7 +22,7 @@ public class DatabaseConnection {
     private String password;
     private String options;
     private static final String MYSQL_DRIVER = "com.mysql.cj.jdbc.Driver";
-    private static Connection connection = null;
+    private Connection connection = null;
 
     public Connection getConnection() {
         try {
@@ -43,5 +43,18 @@ public class DatabaseConnection {
             connection = DriverManager.getConnection(connectionString, username, password);
         } catch (ClassNotFoundException ignored) {
         }
+    }
+
+    @Override
+    public String toString() {
+        return "DatabaseConnection{" +
+                "name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", host='" + host + '\'' +
+                ", port='" + port + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", options='" + options + '\'' +
+                '}';
     }
 }

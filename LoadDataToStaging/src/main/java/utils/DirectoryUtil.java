@@ -3,6 +3,7 @@ package utils;
 import java.io.File;
 import java.time.Clock;
 import java.time.LocalDate;
+import java.util.regex.Pattern;
 
 public interface DirectoryUtil {
     /**
@@ -33,15 +34,15 @@ public interface DirectoryUtil {
             String month = localDate.getMonthValue() + "";
             String day = localDate.getDayOfMonth() + "";
 
-            if (month.length() == 1) month = "0" + month;
-            if (day.length() == 1) day = "0" + day;
-
-            String regex = "^result_" + day + "_" + month + "_" + year + "$";
+//            if (month.length() == 1) month = "0" + month;
+//            if (day.length() == 1) day = "0" + day;
+            String regex = "result_[1-3]_" + year + "-" + month + "-" + day;
 
             String fileName = file.getName();
             String name = fileName.substring(0, fileName.lastIndexOf("."));
             String extension = fileName.substring(fileName.lastIndexOf("."));
-            return extension.equals(".csv") && regex.matches(name);
+            System.out.println(Pattern.compile(regex).matcher(name).matches());
+            return extension.equals(".csv") && Pattern.compile(regex).matcher(name).matches();
         });
     }
 

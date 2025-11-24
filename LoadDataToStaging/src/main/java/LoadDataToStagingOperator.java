@@ -30,10 +30,11 @@ public class LoadDataToStagingOperator {
         //Get targetPath
         String targetPath = ProcessDetail.getInstance().getTargetPath();
         File[] listFile = DirectoryUtil.getAllFileByDate(targetPath, offset);
-
         if (listFile == null) return;
         //Get all file and load to staging
+        service.truncateOldData();
         for (File file : listFile) {
+            System.out.println(file.getName());
             try {
                 service.transformAndLoadDataToStaging(file);
                 control.addNewLog(

@@ -22,7 +22,7 @@ public class CrawlDataOperator {
         }
 
         LoadConfigOperator configLoader = new LoadConfigOperator();
-        configLoader.loadConfig(type);
+        configLoader.loadConfig(type, offset);
         DataSource dataSource = configLoader.getDataSource();
 
         List<CrawlResult> listResult = CrawlDataService.crawl(dataSource, offset);
