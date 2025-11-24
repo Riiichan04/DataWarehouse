@@ -24,26 +24,15 @@ public class ProcessService {
                 String name = rs.getString("name");
                 String desc = rs.getString("description");
 
-                if("extract".equals(type)) {
-                    if(isExtractAdded) {
-                        continue;
-                    }
-
-                    isExtractAdded = true;
-
-                    name = "Extract (all regions)";
-                    desc = "Extract all regions";
-                }
-
                 switch (id) {
                     // Extract (1, 2, 3)
-                    case 1:
-                        targetPath = "/dw_t4c2n10/staging/result/";
+                    case 1, 2, 3:
+                        targetPath = "/dw_t4c2n10/staging/result/result_" + id + "_" + runDate + ".json";
                     break;
 
                     // Load Staging (4)
                     case 4:
-                        targetPath = "/dw_t4c2n10/staging/result/result_" + runDate + ".csv";
+                        targetPath = "/dw_t4c2n10/staging/result";
                         break;
 
                     // Transform Fact (5)

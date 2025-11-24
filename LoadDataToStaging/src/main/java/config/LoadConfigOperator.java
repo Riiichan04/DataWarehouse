@@ -24,7 +24,7 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 public class LoadConfigOperator {
-    private String configPath = "/dw_t4c2n10/config/configLoader.jar";
+    private String configPath = "/dw_t4c2n10/config/LoadConfig.jar";
     private String configJsonPath = "/dw_t4c2n10/config/config.json";
     private String logMessage = "";
 

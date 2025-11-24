@@ -24,9 +24,10 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 public class LoadConfigOperator {
-    private String configControl = "/config/config.json";
-    private String configPath = "/config/configLoader.jar";
+    private String configControl = "/dw_t4c2n10/config/config.json";
+    private String configPath = "/dw_t4c2n10/config/LoadConfig.jar";
     private String logMessage = "";
+    private String dataSourceType;
     private DataSource dataSource;
 
     public DatabaseConnection loadDatabaseConfig() {
@@ -67,9 +68,10 @@ public class LoadConfigOperator {
         }
     }
 
-    public void loadConfig() {
+    public void loadConfig(String dataSourceType) {
+        this.dataSourceType = dataSourceType;
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", configPath);
+            ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", configPath, "0", "0", "0", "0", configControl);
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
 
@@ -80,15 +82,14 @@ public class LoadConfigOperator {
             while ((line = br.readLine()) != null) {
                 commandResult.append(line);
             }
+            br.close();
             //Get exit code
             int exitCode = process.waitFor();
             if (exitCode != 0) {
                 //Log err here
             }
-
             //Parse JSON
             JsonObject jsonResult = JsonParser.parseString(commandResult.toString()).getAsJsonObject();
-
             this.dataSource = configDataSource(jsonResult);
             configProcess(jsonResult);
         } catch (Exception e) {
@@ -101,9 +102,20 @@ public class LoadConfigOperator {
         JsonArray listProcess = configJson.get("processes").getAsJsonArray();
         String name;
         String targetPath;
+
+        if (this.dataSourceType != null) {
+            switch (this.dataSourceType.toUpperCase()) {
+                case "NORTH" -> processDetail.updateProcessId(CrawlType.NORTH.getValue());
+                case "SOUTH" -> processDetail.updateProcessId(CrawlType.SOUTH.getValue());
+                case "MIDDLE" -> processDetail.updateProcessId(CrawlType.MIDDLE.getValue());
+                default -> {}
+            }
+        }
+
         for (JsonElement process : listProcess) {
             JsonObject obj = process.getAsJsonObject();
             int id = obj.get("id").getAsInt();
+
             if (id == processDetail.getProcessId()) {
                 name = obj.get("name").getAsString();
                 targetPath = obj.get("targetPath").getAsString();
@@ -116,31 +128,33 @@ public class LoadConfigOperator {
     }
 
     private DataSource configDataSource(JsonObject jsonResult) {
-        JsonObject sourceJson = jsonResult.getAsJsonObject("source");
-//            JsonObject processJson = jsonResult.getAsJsonObject("source_process");
+        JsonArray srcJson = jsonResult.getAsJsonArray("source");
+        for (JsonElement source : srcJson) {
+            JsonObject sourceJson = source.getAsJsonObject();
+            String type = this.dataSourceType;
+            CrawlType crawlType;
+            switch (type.toUpperCase()) {
+                case "NORTH" -> crawlType = CrawlType.NORTH;
+                case "SOUTH" -> crawlType = CrawlType.SOUTH;
+                case "MIDDLE" -> crawlType = CrawlType.MIDDLE;
+                default -> crawlType = null;
+            }
+            if (crawlType == null) continue;
 
-        int sourceId = sourceJson.get("id").getAsInt();
-        String sourceName = sourceJson.get("name").getAsString();
-        String url = sourceJson.get("url").getAsString();
+            int sourceTypeId = crawlType.getValue();
+            int sourceId = sourceJson.get("id").getAsInt();
+            if (sourceId != sourceTypeId) continue;
 
-//            String targetPath = processJson.get("targetPath").getAsString();
+            String sourceName = sourceJson.get("name").getAsString();
+            String url = sourceJson.get("url").getAsString();
 
-        String type = jsonResult.get("type").getAsString();
-        CrawlType crawlType;
-        switch (type.toUpperCase()) {
-            case "NORTH" -> crawlType = CrawlType.NORTH;
-            case "SOUTH" -> crawlType = CrawlType.SOUTH;
-            case "MIDDLE" -> crawlType = CrawlType.MIDDLE;
-            default -> crawlType = null;
+            DataSource result = new DataSource();
+            result.setSourceId(sourceId);
+            result.setName(sourceName);
+            result.setUrl(url);
+            result.setType(crawlType);
+            return result;
         }
-
-        if (crawlType == null) return null;
-
-        DataSource result = new DataSource();
-        result.setSourceId(sourceId);
-        result.setName(sourceName);
-        result.setUrl(url);
-        result.setType(crawlType);
-        return result;
+        return null;
     }
 }

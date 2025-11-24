@@ -23,17 +23,9 @@ public class CrawlDataService {
     public static List<CrawlResult> crawl(DataSource dataSource, int offset) {
         //Always >= 0
         offset = Math.abs(offset);
-        String urlDestination;
         CrawlType crawlType = dataSource.getType();
-        //Temp, will fixed later
-        switch (crawlType) {
-            case NORTH -> urlDestination = "xo-so-mien-bac/xsmb-p1.html";
-            case MIDDLE -> urlDestination = "xo-so-mien-trung/xsmt-p1.html";
-            case SOUTH -> urlDestination = "xo-so-mien-nam/xsmn-p1.html";
-            default -> urlDestination = "";
-        }
 
-        String url = dataSource.getUrl() + urlDestination;
+        String url = dataSource.getUrl();
         try {
             Document doc = Jsoup.connect(url)
                     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\"")
@@ -89,7 +81,7 @@ public class CrawlDataService {
         Elements tds = table.select("tr td");
         List<String> listResult = new ArrayList<>();
 
-        for (int i = 0; i < tds.size(); i++) {
+        for (int i = tds.size() - 1; i >= 0; i--) {
             // JS: i % 2 == 0 && i > 0
             if (i % 2 == 0 && i > 0) {
                 // JS: e.innerText -> Java: element.text()

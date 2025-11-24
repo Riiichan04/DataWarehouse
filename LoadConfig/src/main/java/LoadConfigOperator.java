@@ -26,12 +26,12 @@ public class LoadConfigOperator {
             }
 
             String configPath = args[4];
-            System.out.println("Loading config from: " + configPath);
+//            System.out.println("Loading config from: " + configPath);
             JSONObject dbCfg = loadJsonFromFile(configPath);
 
             String runDate = calculateRunDate(args);
 
-            String url = "jdbc:mysql://" + dbCfg.get("host") + ":" + dbCfg.get("port") + "/" + dbCfg.get("dbname");
+            String url = "jdbc:mysql://" + dbCfg.get("host") + ":" + dbCfg.get("port") + "/" + dbCfg.get("name");
             try (Connection conn = DriverManager.getConnection(url, dbCfg.getString("username"), dbCfg.getString("password"))) {
 
                 SourceService sourceService = new SourceService();
