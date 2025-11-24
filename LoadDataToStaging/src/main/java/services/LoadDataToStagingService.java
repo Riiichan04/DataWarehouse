@@ -50,7 +50,6 @@ public class LoadDataToStagingService {
                 String[] parsedLine = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 String date = parsedLine[0];
                 String companyName = parsedLine[1];
-                String createdAt = parsedLine[2];
                 String regionName = parsedLine[3];
                 List<String> prizeString = List.of(parsedLine).subList(4, parsedLine.length);
                 List<Prize> listPrize = new ArrayList<>();
@@ -59,7 +58,7 @@ public class LoadDataToStagingService {
                     listPrize.add(new Prize("Giải " + i, prizeString.get(i)));
                 }
 
-                CrawlResult crawlResult = new CrawlResult(date, companyName, createdAt, regionName, listPrize);
+                CrawlResult crawlResult = new CrawlResult(date, companyName, regionName, listPrize);
                 result.add(crawlResult);
             }
             br.close();
@@ -117,8 +116,16 @@ public class LoadDataToStagingService {
     }
 
     //Load a model into staging database
-    private int loadModelToStaging(CrawlResult input) {
-        return stagingDAO.loadDataToStaging(input);
+    private void loadModelToStaging(CrawlResult input) {
+        String date = input.getDate();
+        String companyName = input.getCompanyName();
+        String regionName = input.getRegionName();
+        List<Prize> listPrize = input.getListPrize();
+        for (Prize prize : listPrize) {
+            String prizeName = prize.getName();
+            String result = prize.getResult();
+            stagingDAO.loadDataToStaging(date, prizeName, companyName, result, regionName);
+        }
     }
 
 }

@@ -21,7 +21,7 @@ public class LoadDataToStagingOperator {
                     Long.parseLong(args[2]),
                     Long.parseLong(args[3])
             );
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             System.out.println("Invalid date offset, used zero offset instead.");
         }
         //Service

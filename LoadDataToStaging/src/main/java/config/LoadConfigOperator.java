@@ -24,12 +24,12 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 public class LoadConfigOperator {
-    private String configPath = "/config/configLoader.jar";
-    private String configJsonPath = "/config/config.json";
+    private String configPath = "/dw_t4c2n10/config/configLoader.jar";
+    private String configJsonPath = "/dw_t4c2n10/config/config.json";
     private String logMessage = "";
-    private ControlService service = new ControlService();
 
     public DatabaseConnection loadStagingDatabase() {
+        ControlService service = new ControlService();
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", configPath);
             processBuilder.redirectErrorStream(true);
