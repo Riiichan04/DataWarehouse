@@ -16,7 +16,7 @@ public class DatabaseConnection {
     private String port;
     private String username;
     private String password;
-    private String characterEncoding;
+    private String characterEncoding = "useUnicode=true&characterEncoding=UTF-8";
     private static final String MYSQL_DRIVER = "com.mysql.cj.jdbc.Driver";
 
 }
