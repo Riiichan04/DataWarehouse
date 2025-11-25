@@ -48,7 +48,7 @@ public class ProcessService {
 
                     //Dump aggerate (11)
                     //Load to Data Mart (12)
-                    case 11, 12 -> "/dw_t4c2n10/aggregate/aggregate_" + runDate + ".json";
+                    case 11, 12 -> "/dw_t4c2n10/staging/aggregate/aggregate_" + runDate + ".json";
                     default -> "";
                 };
 
