@@ -22,7 +22,7 @@ public class DatabaseConnection {
     private String password;
     private String options;
     private static final String MYSQL_DRIVER = "com.mysql.cj.jdbc.Driver";
-    private static Connection connection = null;
+    private Connection connection = null;
 
     public Connection getConnection() {
         try {

@@ -108,15 +108,15 @@ public class LoadConfigOperator {
             //If result != null
 
             if (result == null) {
-//                writeErrorLog("Warehouse DB info not found");
+                writeErrorLog("Warehouse DB info not found");
                 return null;
             }
 
-//            writeSuccessLog("Extract warehouse DB success");
+            writeSuccessLog("Extract warehouse DB success");
 
             return result;
         } catch (Exception e) {
-//            writeErrorLog("Exception: " + e.getMessage());
+            writeErrorLog("Exception: " + e.getMessage());
             return null;
         }
     }
