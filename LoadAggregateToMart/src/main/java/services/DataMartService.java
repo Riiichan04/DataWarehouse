@@ -1,5 +1,7 @@
 package services;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import config.WarehouseConnector;
@@ -51,75 +53,95 @@ public class DataMartService {
     }
 
     private void insertMostAppear(JsonObject jsonObject) {
-        JsonObject inputJson = jsonObject.getAsJsonObject("agg_prize_result_freq");
-        int prizeId = inputJson.get("prizeId").getAsInt();
-        String result = inputJson.get("result").getAsString();
-        int frequency = inputJson.get("frequency").getAsInt();
-        Timestamp timestamp = new Timestamp(inputJson.get("createdAt").getAsLong());
+        JsonArray jsonArr = jsonObject.getAsJsonArray("agg_prize_result_freq");
+        dataMartDAO.truncateAggHistoryPrizes();
+        for (JsonElement ele : jsonArr) {
+            JsonObject inputJson = ele.getAsJsonObject();
+            int prizeId = inputJson.get("prizeId").getAsInt();
+            String result = inputJson.get("result").getAsString();
+            int frequency = inputJson.get("frequency").getAsInt();
+            Timestamp timestamp = Timestamp.valueOf(inputJson.get("createdAt").getAsString());
 
-//        WarehouseConnector.getInstance().useTransaction(handle -> {
-//            dataMartDAO = handle.attach(DataMartDAO.class);
-            dataMartDAO.truncateAggHistoryPrizes();
-            dataMartDAO.insertMostAppearReward(prizeId, result, timestamp, frequency);
-//        });
+            WarehouseConnector.getInstance().useTransaction(handle -> {
+                dataMartDAO = handle.attach(DataMartDAO.class);
+                dataMartDAO.insertMostAppearReward(prizeId, result, timestamp, frequency);
+            });
+        }
+
     }
 
     private void insertResultFrequencies(JsonObject jsonObject) {
-        JsonObject inputJson = jsonObject.getAsJsonObject("agg_number_week_result_freq");
-        int numberOfWeek = inputJson.get("numberOfWeek").getAsInt();
-        int prizeId = inputJson.get("prizeId").getAsInt();
-        String result = inputJson.get("result").getAsString();
-        int frequency = inputJson.get("frequency").getAsInt();
-        Timestamp timestamp = new Timestamp(inputJson.get("createdAt").getAsLong());
+        JsonArray jsonArr = jsonObject.getAsJsonArray("agg_number_week_result_freq");
+        dataMartDAO.truncateAggResultFrequencies();
+        for (JsonElement ele : jsonArr) {
+            JsonObject inputJson = ele.getAsJsonObject();
+            int numberOfWeek = inputJson.get("numberOfWeek").getAsInt();
+            int prizeId = inputJson.get("prizeId").getAsInt();
+            String result = inputJson.get("result").getAsString();
+            int frequency = inputJson.get("frequency").getAsInt();
+            Timestamp timestamp = Timestamp.valueOf(inputJson.get("createdAt").getAsString());
 
-//        WarehouseConnector.getInstance().useTransaction(handle -> {
-//            dataMartDAO = handle.attach(DataMartDAO.class);
-            dataMartDAO.truncateAggResultFrequencies();
-            dataMartDAO.insertResultFrequencies(result, numberOfWeek, timestamp, prizeId, frequency);
-//        });
+            WarehouseConnector.getInstance().useTransaction(handle -> {
+                dataMartDAO = handle.attach(DataMartDAO.class);
+                dataMartDAO.insertResultFrequencies(result, numberOfWeek, timestamp, prizeId, frequency);
+            });
+        }
     }
 
     private void insertPairFrequencies(JsonObject jsonObject) {
-        JsonObject inputJson = jsonObject.getAsJsonObject("agg_tail_prize_freq");
-        int prizeId = inputJson.get("prizeId").getAsInt();
-        String result = inputJson.get("tailResult").getAsString();
-        int frequency = inputJson.get("frequency").getAsInt();
-        Timestamp timestamp = new Timestamp(inputJson.get("createdAt").getAsLong());
+        JsonArray jsonArr = jsonObject.getAsJsonArray("agg_tail_prize_freq");
+        dataMartDAO.truncateAggPairFrequencies();
+        for (JsonElement ele : jsonArr) {
+            JsonObject inputJson = ele.getAsJsonObject();
+            int prizeId = inputJson.get("prizeId").getAsInt();
+            String result = inputJson.get("tailResult").getAsString();
+            int frequency = inputJson.get("frequency").getAsInt();
+            Timestamp timestamp = Timestamp.valueOf(inputJson.get("createdAt").getAsString());
 
-//        WarehouseConnector.getInstance().useTransaction(handle -> {
-//            dataMartDAO = handle.attach(DataMartDAO.class);
-            dataMartDAO.truncateAggPairFrequencies();
-            dataMartDAO.insertPairFrequencies(result, prizeId, timestamp, frequency);
-//        });
+            WarehouseConnector.getInstance().useTransaction(handle -> {
+                dataMartDAO = handle.attach(DataMartDAO.class);
+                dataMartDAO.insertPairFrequencies(result, prizeId, timestamp, frequency);
+            });
+        }
+
     }
 
     private void insertAggRegionResultFrequencies(JsonObject jsonObject) {
-        JsonObject inputJson = jsonObject.getAsJsonObject("agg_region_result_freq");
-        int regionId = inputJson.get("regionId").getAsInt();
-        int prizeId = inputJson.get("prizeId").getAsInt();
-        String result = inputJson.get("result").getAsString();
-        int frequency = inputJson.get("frequency").getAsInt();
-        Timestamp timestamp = new Timestamp(inputJson.get("createdAt").getAsLong());
+        JsonArray jsonArr = jsonObject.getAsJsonArray("agg_region_result_freq");
+        dataMartDAO.truncateAggRegionResultFrequencies();
 
-//        WarehouseConnector.getInstance().useTransaction(handle -> {
-//            dataMartDAO = handle.attach(DataMartDAO.class);
-            dataMartDAO.truncateAggRegionResultFrequencies();
-            dataMartDAO.insertRegionResultFrequencies(regionId, prizeId, result, timestamp, frequency);
-//        });
+        for (JsonElement ele : jsonArr) {
+            JsonObject inputJson = ele.getAsJsonObject();
+            int regionId = inputJson.get("regionId").getAsInt();
+            int prizeId = inputJson.get("prizeId").getAsInt();
+            String result = inputJson.get("result").getAsString();
+            int frequency = inputJson.get("frequency").getAsInt();
+            Timestamp timestamp = Timestamp.valueOf(inputJson.get("createdAt").getAsString());
+
+            WarehouseConnector.getInstance().useTransaction(handle -> {
+                dataMartDAO = handle.attach(DataMartDAO.class);
+                dataMartDAO.insertRegionResultFrequencies(regionId, prizeId, result, timestamp, frequency);
+            });
+        }
     }
 
     public void insertRegionDim(JsonObject jsonObject) {
-        JsonObject inputJson = jsonObject.getAsJsonObject("dim_region");
-        String codeRegion = inputJson.get("codeRegion").getAsString();
-        String name = inputJson.get("name").getAsString();
-        String description = inputJson.get("description").getAsString();
-        Timestamp createdAt = new Timestamp(inputJson.get("createdAt").getAsLong());
-        Timestamp expiredAt = new Timestamp(inputJson.get("expiredAt").getAsLong());
+        JsonArray jsonArr = jsonObject.getAsJsonArray("dim_region");
 
-//        WarehouseConnector.getInstance().useTransaction(handle -> {
-//            dataMartDAO = handle.attach(DataMartDAO.class);
-            dataMartDAO.truncateDimRegion();
-            dataMartDAO.insertToDimRegion(codeRegion, name, description, createdAt, expiredAt);
-//        });
+        dataMartDAO.truncateDimRegion();
+        for (JsonElement ele : jsonArr) {
+            JsonObject inputJson = ele.getAsJsonObject();
+            String codeRegion = inputJson.get("codeRegion").getAsString();
+            String name = inputJson.get("name").getAsString();
+            String description = inputJson.get("description").getAsString();
+            Timestamp createdAt = Timestamp.valueOf(inputJson.get("createdAt").getAsString());
+            Timestamp expiredAt = Timestamp.valueOf(inputJson.get("expiredAt").getAsString());
+            WarehouseConnector.getInstance().useTransaction(handle -> {
+                dataMartDAO = handle.attach(DataMartDAO.class);
+                dataMartDAO.insertToDimRegion(codeRegion, name, description, createdAt, expiredAt);
+            });
+        }
+
+
     }
 }
