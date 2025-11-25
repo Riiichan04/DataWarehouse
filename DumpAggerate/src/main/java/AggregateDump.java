@@ -29,7 +29,7 @@ public class AggregateDump {
         }
 
         String dateStr = new SimpleDateFormat("yyyy_MM_dd").format(new Date());
-        String basePath = "dw_t4c2n10" + File.separator + "staging" + File.separator + "aggregate";
+        String basePath = "/dw_t4c2n10" + File.separator + "staging" + File.separator + "aggregate";
         File folder = new File(basePath);
         if (!folder.exists()) {
             folder.mkdirs();
