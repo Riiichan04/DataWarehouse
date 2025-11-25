@@ -23,11 +23,11 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 public class LoadConfigOperator {
-//    private String configPath = "/config/configLoader.jar";
-//    private String configJsonPath = "/config/config.json";
+//    private String configPath = "F:/Github/DataWarehouse/DumpAggerate/src/main/resources/config/LoadConfig.jar";
+//    private String configJsonPath = "F:/Github/DataWarehouse/DumpAggerate/src/main/resources/config/config.json";
 
-    private String configPath = "F:/Github/DataWarehouse/DumpAggerate/src/main/resources/config/LoadConfig.jar";
-    private String configJsonPath = "F:/Github/DataWarehouse/DumpAggerate/src/main/resources/config/config.json";
+    private String configPath = "/config/configLoader.jar";
+    private String configJsonPath = "/config/config.json";
     private String logMessage = "";
 
     public DatabaseConnection loadWarehouseDatabase() {
@@ -60,8 +60,6 @@ public class LoadConfigOperator {
                 System.out.println("===========================================");
                 return null;
             }
-            System.out.println("JAR Output: \n" + commandResult.toString());
-
 
             String output = commandResult.toString();
 
@@ -105,7 +103,6 @@ public class LoadConfigOperator {
             processDetail.initData(processName, processTarget);
 
             DatabaseConnection result = extractJsonResultToDatabaseConnection(jsonResult, StorageType.WAREHOUSE);
-            //If result != null
 
             if (result == null) {
                 writeErrorLog("Warehouse DB info not found");

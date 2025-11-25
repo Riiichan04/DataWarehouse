@@ -17,11 +17,12 @@ public class AggregateDump {
                 "agg_prize_result_freq",
                 "agg_number_week_result_freq",
                 "agg_tail_prize_freq",
-                "dim_date"
+                "agg_region_result_freq",
+                "dim_region"
         };
 
-        JSONObject allData = new JSONObject();
 
+        JSONObject allData = new JSONObject();
         for (String table : tables) {
             JSONArray data = fetchTableData(table);
             allData.put(table, data);
