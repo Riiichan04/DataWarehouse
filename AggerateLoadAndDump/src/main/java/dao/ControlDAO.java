@@ -9,8 +9,8 @@ import java.sql.Timestamp;
 public interface ControlDAO {
     //Insert log
     @SqlUpdate("""
-                insert into log_process(processId, startTime, endTime, status, message, createdAt, updatedAt)
-                value(:processId, :startTime, :endTime, :status, :message, now(), now())
+                insert into log_process(processId, startTime, endTime, status, message, createdAt)
+                value(:processId, :startTime, :endTime, :status, :message, now())
             """)
     @GetGeneratedKeys
     int insertLogProcess(

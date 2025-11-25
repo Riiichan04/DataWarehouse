@@ -37,7 +37,7 @@ public class AggregateService {
                     ProcessDetail.getInstance().getProcessId(),
                     new Timestamp(System.currentTimeMillis()),
                     new Timestamp(System.currentTimeMillis()),
-                    LogLevel.ERROR.getLevel(),
+                    LogLevel.SUCCESS.getLevel(),
                     "Insert aggregate data successful."
             );
         }
