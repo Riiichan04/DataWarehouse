@@ -14,9 +14,9 @@ public class AggregateDump {
     public static void main(String[] args) {
 
         String[] tables = {
-                "aggregate_historical_prizes",
-                "aggregate_result_frequencies",
-                "aggregate_pair_frequencies",
+                "agg_prize_result_freq",
+                "agg_number_week_result_freq",
+                "agg_tail_prize_freq",
                 "dim_date"
         };
 
