@@ -28,7 +28,7 @@ public class AggregateDump {
             allData.put(table, data);
         }
 
-        String dateStr = new SimpleDateFormat("dd_MM_yyyy").format(new Date());
+        String dateStr = new SimpleDateFormat("yyyy_MM_dd").format(new Date());
         String basePath = "dw_t4c2n10" + File.separator + "staging" + File.separator + "aggregate";
         File folder = new File(basePath);
         if (!folder.exists()) {

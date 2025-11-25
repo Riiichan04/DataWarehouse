@@ -83,10 +83,10 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>LoadConfigOperator</mainClass>
+                            <mainClass>AggregateDump</mainClass>
                         </manifest>
                     </archive>
-                    <finalName>LoadConfig</finalName>
+                    <finalName>DumpAggregate</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
                 <executions>
@@ -101,7 +101,5 @@
             </plugin>
         </plugins>
     </build>
-
-
 
 </project>

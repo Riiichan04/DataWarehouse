@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 import enums.LogLevel;
 import enums.StorageType;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import models.ProcessDetail;
 import services.ControlService;
-import util.AESUtil;
 
 import java.io.*;
 import java.sql.Timestamp;
@@ -23,11 +21,9 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 public class LoadConfigOperator {
-//    private String configPath = "F:/Github/DataWarehouse/DumpAggerate/src/main/resources/config/LoadConfig.jar";
-//    private String configJsonPath = "F:/Github/DataWarehouse/DumpAggerate/src/main/resources/config/config.json";
 
-    private String configPath = "/config/configLoader.jar";
-    private String configJsonPath = "/config/config.json";
+    private String configPath = "/dw_t4c2n10/config/LoadConfig.jar";
+    private String configJsonPath = "/dw_t4c2n10/config/config.json";
     private String logMessage = "";
 
     public DatabaseConnection loadWarehouseDatabase() {
@@ -196,7 +192,8 @@ public class LoadConfigOperator {
         String username = jsonInput.get("username").getAsString();
         String password = jsonInput.get("password").getAsString();
 
-        DatabaseConnection databaseConnection = new DatabaseConnection();
+        DatabaseConnection databaseConnection;
+        databaseConnection = new DatabaseConnection();
         databaseConnection.setName(name);
         databaseConnection.setType(type);
         databaseConnection.setHost(host);
