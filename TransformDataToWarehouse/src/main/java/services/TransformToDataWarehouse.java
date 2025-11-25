@@ -41,6 +41,8 @@ public class TransformToDataWarehouse {
             List<FactLottery> transformedFacts = new ArrayList<>();
 
             for (LotteryStaging stagingRecord : lotteryStagings) {
+                if(stagingRecord.getResult() == null || stagingRecord.getResult().equals("")) continue;
+
                 int dateSk = (stagingRecord.getDate() == null) ? -1: stagingDAO.getDateSK(stagingRecord.getDate());
                 int companySk = (stagingRecord.getCompanyName() == null) ? -1: stagingDAO.getCompanySK(stagingRecord.getCompanyName());
                 int prizeSk = (stagingRecord.getPrizeName() == null) ? -1: stagingDAO.getPrizeSK(stagingRecord.getPrizeName());
