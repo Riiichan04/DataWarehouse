@@ -12,7 +12,10 @@ import java.sql.Timestamp;
 
 public class LoadDataToStagingOperator {
     public static void main(String[] args) {
-        //Get offset from param, default is 0 0 0 0
+        //1. Load config từ file config.json và từ script LoadConfig.jar
+        LoadDataToStagingService service = new LoadDataToStagingService();
+        ControlService control = new ControlService();
+        //2. Kiểm tra tham số đầu vào của tiến trình. Nếu không có thì lấy của ngày hôm nay.
         OffsetLocalDate offset = new OffsetLocalDate();
         try {
             offset = new OffsetLocalDate(
@@ -24,9 +27,7 @@ public class LoadDataToStagingOperator {
         } catch (Exception e) {
             System.out.println("Invalid date offset, used zero offset instead.");
         }
-        //Service
-        LoadDataToStagingService service = new LoadDataToStagingService();
-        ControlService control = new ControlService();
+
         //Get targetPath
         String targetPath = ProcessDetail.getInstance().getTargetPath();
         File[] listFile = DirectoryUtil.getAllFileByDate(targetPath, offset);
@@ -34,7 +35,6 @@ public class LoadDataToStagingOperator {
         //Get all file and load to staging
         service.truncateOldData();
         for (File file : listFile) {
-            System.out.println(file.getName());
             try {
                 service.transformAndLoadDataToStaging(file);
                 control.addNewLog(

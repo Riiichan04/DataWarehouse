@@ -19,6 +19,7 @@ public interface DirectoryUtil {
         } else return dir.listFiles();
     }
 
+    //3. Kiểm tra file chứa dữ liệu đã thu thập của ngày được chọn có chưa
     /**
      * Get result .csv file for a date
      * @param directoryPath Path of directory contain crawl result
@@ -41,7 +42,6 @@ public interface DirectoryUtil {
             String fileName = file.getName();
             String name = fileName.substring(0, fileName.lastIndexOf("."));
             String extension = fileName.substring(fileName.lastIndexOf("."));
-            System.out.println(Pattern.compile(regex).matcher(name).matches());
             return extension.equals(".csv") && Pattern.compile(regex).matcher(name).matches();
         });
     }

@@ -45,13 +45,14 @@ public class LoadDataToStagingService {
      */
     public List<CrawlResult> transformResultToModel(File inputFile) {
         try {
+            // 4. Đọc nội dung của file được chọn
             List<CrawlResult> result = new ArrayList<>();
             BufferedReader br = new BufferedReader(new FileReader(inputFile));
             //Skip header
             br.readLine();
             String line = "";
+            //5. 5. Đọc nội dung trong file và lưu lại dưới dạng một List model, sau đó ghi log
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
                 //Temp, will replaced by library here
                 //-1 to keep case prize 8 missing in Northen
                 String[] parsedLine = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
@@ -96,17 +97,15 @@ public class LoadDataToStagingService {
 
     //Load a list model into staging database
     public void loadDataToStaging(List<CrawlResult> listInput) {
-        System.out.println(listInput.size());
         try {
+            //6. Duyệt qua List model và tiến hành thêm dữ liệu trong từng model vào database
             for (CrawlResult crawlResult : listInput) {
-                System.out.println(crawlResult.getCompanyName());
                 //Only insert new data if date not exist
                 if (!stagingDAO.isDateExist(crawlResult.getDate(), crawlResult.getCompanyName())) {
-                    System.out.println("OMG");
                     loadModelToStaging(crawlResult);
                 }
             }
-
+            //8. Lưu log xuống database control với trạng thái SUCCESS
             controlService.addNewLog(
                     ProcessDetail.getInstance().getProcessId(),
                     new Timestamp(System.currentTimeMillis()),
@@ -116,7 +115,7 @@ public class LoadDataToStagingService {
             );
         }
         catch (Exception e) {
-            e.printStackTrace();
+            //7. Lưu log xuống database control với trạng thái ERROR
             controlService.addNewLog(
                     ProcessDetail.getInstance().getProcessId(),
                     new Timestamp(System.currentTimeMillis()),

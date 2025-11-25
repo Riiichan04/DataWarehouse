@@ -23,6 +23,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Getter
 @Setter
+//1. Load config từ file config.json và từ script LoadConfig.jar
 public class LoadConfigOperator {
     private String configPath = "/dw_t4c2n10/config/LoadConfig.jar";
     private String configJsonPath = "/dw_t4c2n10/config/config.json";

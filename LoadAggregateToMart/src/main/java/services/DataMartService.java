@@ -12,6 +12,7 @@ import models.ProcessDetail;
 import java.io.File;
 import java.io.FileReader;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class DataMartService {
     DataMartDAO dataMartDAO;
@@ -135,7 +136,7 @@ public class DataMartService {
             String name = inputJson.get("name").getAsString();
             String description = inputJson.get("description").getAsString();
             Timestamp createdAt = Timestamp.valueOf(inputJson.get("createdAt").getAsString());
-            Timestamp expiredAt = Timestamp.valueOf(inputJson.get("expiredAt").getAsString());
+            Timestamp expiredAt = Timestamp.valueOf(LocalDateTime.parse(inputJson.get("expiredAt").getAsString()));
             WarehouseConnector.getInstance().useTransaction(handle -> {
                 dataMartDAO = handle.attach(DataMartDAO.class);
                 dataMartDAO.insertToDimRegion(codeRegion, name, description, createdAt, expiredAt);

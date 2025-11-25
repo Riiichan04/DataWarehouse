@@ -78,7 +78,7 @@
                             <mainClass>AggregateLoadAndDumpOperation</mainClass>
                         </manifest>
                     </archive>
-                    <finalName>AggregateLoadAndDump</finalName>
+                    <finalName>LoadAggregate</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
                 <executions>
