@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>vn.id.dwt4c2n10</groupId>
-    <artifactId>TransformDataToWarehouse</artifactId>
+    <groupId>org.example</groupId>
+    <artifactId>LoadDataToDataWarehouse</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -53,7 +53,7 @@
     </dependencies>
 
     <build>
-        <finalName>warehouseTransformer</finalName>
+        <finalName>warehouseLoader</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -62,11 +62,12 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>TransformDataToWarehouseOperator</mainClass>
+                            <mainClass>LoadDataToDataWarehouseOperator</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
 </project>
