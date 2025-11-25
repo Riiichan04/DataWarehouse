@@ -11,7 +11,8 @@ import java.util.List;
 
 public class DatabaseService {
 
-    public List<DatabaseConfig> getActiveDatabases(Connection conn) throws SQLException {
+    public List<DatabaseConfig>
+    getActiveDatabases(Connection conn) throws SQLException {
         List<DatabaseConfig> dbList = new ArrayList<>();
         String sql = "SELECT * FROM cfg_database WHERE isActive = 1";
 

@@ -1,8 +1,8 @@
 package enums;
 
 public enum LogLevel {
-    SUCCESS(1),
-    PENDING(10),
+    PENDING(1),
+    SUCCESS(10),
     ERROR(100);
 
     private final int level;

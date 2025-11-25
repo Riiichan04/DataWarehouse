@@ -24,53 +24,33 @@ public class ProcessService {
                 String name = rs.getString("name");
                 String desc = rs.getString("description");
 
-                if("extract".equals(type)) {
-                    if(isExtractAdded) {
-                        continue;
-                    }
-
-                    isExtractAdded = true;
-
-                    name = "Extract (all regions)";
-                    desc = "Extract all regions";
-                }
-
-                switch (id) {
+                targetPath = switch (id) {
                     // Extract (1, 2, 3)
-                    case 1:
-                        targetPath = "/dw_t4c2n10/staging/result/";
-                    break;
+                    case 1, 2, 3 -> "/dw_t4c2n10/staging/result/result_" + id + "_" + runDate + ".csv";
 
                     // Load Staging (4)
-                    case 4:
-                        targetPath = "/dw_t4c2n10/staging/result/result_" + runDate + ".csv";
-                        break;
+                    case 4 -> "/dw_t4c2n10/staging/result";
 
                     // Transform Fact (5)
-                    case 5:
-                        targetPath = "/dw_t4c2n10/staging/transform_warehouse.json";
-                        break;
+                    case 5 -> "/dw_t4c2n10/staging/transform_warehouse.json";
 
                     // Transform Dim (6)
-                    case 6:
-                        targetPath = "/dw_t4c2n10/staging/dim_warehouse.json";
-                        break;
+                    case 6 -> "/dw_t4c2n10/staging/dim_warehouse.json";
 
                     // Load Warehouse (7, 8)
-                    case 7:
-                    case 8:
-                        targetPath = "/dw_t4c2n10/warehouse/";
-                        break;
+                    case 7, 8 -> "/dw_t4c2n10/warehouse/";
 
                     // Load Presentation / Dim Staging (9)
-                    case 9:
-                        targetPath = "/dw_t4c2n10/presentation/";
-                        break;
+                    case 9 -> "/dw_t4c2n10/presentation/";
 
-                    default:
-                        targetPath = "";
-                        break;
-                }
+                    // Load aggerate (10)
+                    case 10 -> "";
+
+                    //Dump aggerate (11)
+                    //Load to Data Mart (12)
+                    case 11, 12 -> "/dw_t4c2n10/staging/aggregate/aggregate_" + runDate + ".json";
+                    default -> "";
+                };
 
 
                 list.add(new Process(

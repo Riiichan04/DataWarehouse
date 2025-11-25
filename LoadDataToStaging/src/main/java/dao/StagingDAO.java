@@ -17,17 +17,23 @@ public interface StagingDAO {
     //Insert new data into staging
     @SqlUpdate("""
         insert into lottery_staging(date, prizeName, companyName, result, createdAt, regionName)
-        values(:date, :prizeName, :companyName, :result, :createdAt, :regionName)
+        values(:date, :prizeName, :companyName, :result, now(), :regionName)
     """)
-    @RegisterBeanMapper(CrawlResult.class)
-    int loadDataToStaging(@BindBean CrawlResult result);
+    void loadDataToStaging(
+            @Bind("date") String date,
+            @Bind("prizeName") String prizeName,
+            @Bind("companyName") String companyName,
+            @Bind("result") String result,
+            @Bind("regionName") String regionName
+    );
 
     //Does input date exist in staging database
     @SqlQuery("""
-        select 1
-        from lottery_staging
-        where date = :date
-        limit 1
+        select exists(
+            select 1
+            from lottery_staging
+            where date = :date and companyName = :companyName
+        )
     """)
-    boolean isDateExist(@Bind("date") String date);
+    boolean isDateExist(@Bind("date") String date, @Bind("companyName") String regionName);
 }

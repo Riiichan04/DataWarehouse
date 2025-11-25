@@ -21,7 +21,7 @@ public class LoadDataToStagingOperator {
                     Long.parseLong(args[2]),
                     Long.parseLong(args[3])
             );
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             System.out.println("Invalid date offset, used zero offset instead.");
         }
         //Service
@@ -30,10 +30,11 @@ public class LoadDataToStagingOperator {
         //Get targetPath
         String targetPath = ProcessDetail.getInstance().getTargetPath();
         File[] listFile = DirectoryUtil.getAllFileByDate(targetPath, offset);
-
         if (listFile == null) return;
         //Get all file and load to staging
+        service.truncateOldData();
         for (File file : listFile) {
+            System.out.println(file.getName());
             try {
                 service.transformAndLoadDataToStaging(file);
                 control.addNewLog(

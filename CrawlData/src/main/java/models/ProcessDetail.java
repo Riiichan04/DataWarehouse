@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class ProcessDetail {
     private static ProcessDetail instance;
-    private final int processId = 4;
+    private int processId = 1;
     private String name;
     private String targetPath;
 
@@ -24,4 +24,7 @@ public class ProcessDetail {
         this.targetPath = targetPath;
     }
 
+    public void updateProcessId(int processId) {
+        this.processId = processId;
+    }
 }
