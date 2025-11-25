@@ -13,8 +13,8 @@ import java.io.InputStreamReader;
 public class ConfigLoader {
     // Định nghĩa loại DB dựa trên giá trị trong file cấu hình JSON
     private static final int DB_WAREHOUSE_TYPE = 2;
-    private static final String configPath = "/config/configLoader.jar"; // Đường dẫn tới file JAR cấu hình
-    private String configJsonPath = "/config/config.json";
+    private static final String configPath = "/dw_t4c2n10/config/LoadConfig.jar"; // Đường dẫn tới file JAR cấu hình
+    private String configJsonPath = "/dw_t4c2n10/config/config.json";
 
     private JsonObject loadJsonFromJar() {
         try {

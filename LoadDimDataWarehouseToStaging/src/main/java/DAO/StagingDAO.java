@@ -21,8 +21,8 @@ public interface StagingDAO {
     void truncateTableDate();
 
     @SqlBatch("""
-        INSERT INTO dim_date(date, numberOfWeek)
-        VALUES (:date, :numberOfWeek)
+        INSERT INTO dim_date(id, date, numberOfWeek)
+        VALUES (:id, :date, :numberOfWeek)
     """)
     void insertDimDateBatch(@BindBean List<DimDate> dateList);
 }
