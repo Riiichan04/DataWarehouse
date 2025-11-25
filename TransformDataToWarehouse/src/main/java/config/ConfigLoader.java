@@ -19,7 +19,7 @@ public class ConfigLoader {
     private JsonObject loadJsonFromJar() {
         try {
             // Khởi chạy file JAR bên ngoài
-            ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", configPath);
+            ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", configPath, "0", "0", "0", "0", configJsonPath);
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
 
