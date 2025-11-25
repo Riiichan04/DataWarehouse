@@ -14,48 +14,34 @@ import java.sql.SQLException;
 @Getter
 @Setter
 public class DatabaseConnection {
-
+    private String name;
+    private String type;
     private String host;
     private String port;
-    private String name;
     private String username;
     private String password;
     private String options;
-
-    private Connection connection;
-
     private static final String MYSQL_DRIVER = "com.mysql.cj.jdbc.Driver";
+    private Connection connection = null;
 
     public Connection getConnection() {
-        if (connection == null) {
-            try {
+        try {
+            if (connection == null) {
                 createConnection();
-            } catch (SQLException e) {
-                System.out.println("❌ Cannot connect to database MART");
-                return null;
             }
+            return connection;
+        } catch (SQLException e) {
+            //Log here
+            return null;
         }
-        return connection;
     }
 
     private void createConnection() throws SQLException {
         try {
             Class.forName(MYSQL_DRIVER);
-
-            String connectionString =
-                    "jdbc:mysql://" + host + ":" + port + "/" + name + "?" + options;
-
-            connection = DriverManager.getConnection(
-                    connectionString,
-                    username,
-                    password
-            );
-
-            System.out.println("✅ Connected to MART: " + host + "/" + name);
-
+            String connectionString = "jdbc:mysql://" + host + ":" + port + "/" + name + "?" + options;
+            connection = DriverManager.getConnection(connectionString, username, password);
         } catch (ClassNotFoundException ignored) {
-            System.out.println("❌ Driver not found: " + MYSQL_DRIVER);
         }
     }
 }
-
