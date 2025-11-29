@@ -8,6 +8,11 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import java.sql.Timestamp;
 
 public interface ControlDAO {
+
+    @SqlQuery("""
+        select check_transform_dw_dependent_process(:processId)
+    """)
+    boolean isProcessCanRun(@Bind("processId") int processId);
     //Insert log
     @SqlUpdate("""
                 insert into log_process(processId, startTime, endTime, status, message, createdAt)

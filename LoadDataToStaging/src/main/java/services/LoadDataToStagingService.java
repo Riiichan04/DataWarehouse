@@ -61,7 +61,7 @@ public class LoadDataToStagingService {
                 String regionName = parsedLine[2];
                 List<String> prizeString = List.of(parsedLine).subList(3, parsedLine.length);
                 List<Prize> listPrize = new ArrayList<>();
-
+                if (prizeString.length != 9) continue;
                 for (int i = 0; i < prizeString.size(); i++) {
                     String prizeName = "Giải " + (prizeString.size() - i - 1);
                     if (i == prizeString.size() - 1) {

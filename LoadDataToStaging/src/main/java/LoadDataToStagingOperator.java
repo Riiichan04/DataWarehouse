@@ -28,6 +28,9 @@ public class LoadDataToStagingOperator {
             System.out.println("Invalid date offset, used zero offset instead.");
         }
 
+        //Check dependent
+        if (!control.isProcessCanRun()) return;
+
         //Get targetPath
         String targetPath = ProcessDetail.getInstance().getTargetPath();
         File[] listFile = DirectoryUtil.getAllFileByDate(targetPath, offset);

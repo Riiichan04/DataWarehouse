@@ -24,4 +24,8 @@ public class ControlService {
     ) {
         return controlDAO.insertLogProcess(processId, startTime, endTime, status, message) >= 1;
     }
+
+    public boolean isProcessCanRun() {
+        return controlDAO.isProcessCanRun(ProcessDetail.getInstance().getProcessId());
+    }
 }
